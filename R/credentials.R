@@ -58,44 +58,60 @@ library(keyring)
 #'
 #' @returns A named list of *secrets* for all *elements* with *elements*
 #' used as names.
-#' 
+#'
 #' **Secrets returned as unmasked `characters` (i.e., plain text).**
-#' 
+#'
 #' @examples
 #' # To ask for all credentials needed to access the PolkaNorski Recruitment database:
-#' pn-rec-credentials <- multilada_credentials(prompt = "PN Recruitment database")
+#' pn_rec_credentials <- multilada_credentials(prompt = "PN Recruitment database")
 #' # ---
 #' # To use the system credential store:
 #' \dontrun{
-#' pn-rec-credentials <- multilada_credentials("pn-recruitment", prompt = "PN Recruitment database")
+#' pn_rec_credentials <- multilada_credentials("pn-recruitment", prompt = "PN Recruitment database")
 #' }
 #' # If a given element (e.g., "host") is not yet stored in the system credential store,
 #' # the function asks for it and saves it to the store, so that next time it can be retrieved
 #' # without asking again.
 #' # ---
 #' # To access a single credentials element, e.g., the port number labeled as "port":
-#' pn-rec-credentials$port
+#' pn_rec_credentials$port
+#'
+#' @export
 multilada_credentials <- function(key = NULL, elements = c("host", "port", "name", "username", "password"),
                                   prompt = "Database") {
         sapply(X = elements,
                FUN = multilada_credentials_element, key, prompt, simplify = FALSE)
 }
 
+#' Title
+#'
+#' @param element e
+#' @param key k
+#' @param prompt p
+#'
+#' @return
+#' 0
+#'
+#' @examples
+#' NULL
+#'
+#' @export
 multilada_credentials_element <- function(element, key, prompt) {
         full_prompt <- paste0(prompt, " ", element, ": ")
         if(is.null(key)) {
                 askpass::askpass(full_prompt)
         } else {
-                if(! element %in% key_list(key)$username) key_set(key, element, prompt = full_prompt)
-                key_get(key, element)
+                if(! element %in% keyring::key_list(key)$username) keyring::key_set(key, element, prompt = full_prompt)
+                keyring::key_get(key, element)
         }
 }
 
+#' @export
 multilada_credentials_file_set <- function(key, elements = c("host", "port", "name", "username", "password"),
                                            prompt = "Database") {
-        file_name <- paste0(user_config_dir("r-keyring"), "/", key, ".keyring")
+        file_name <- paste0(rappdirs::user_config_dir("r-keyring"), "/", key, ".keyring")
         if(file.exists(file_name)) file.remove(file_name)
-        multilada_filekey <- backend_file$new(key)
+        multilada_filekey <- keyring::backend_file$new(key)
         multilada_filekey$keyring_create(key)
         sapply(X = elements,
                FUN = function(x) {
@@ -107,10 +123,11 @@ multilada_credentials_file_set <- function(key, elements = c("host", "port", "na
         print(paste("Credentials saved to", file_name))
 }
 
+#' @export
 multilada_credentials_file_where <- function(key = NULL) {
-        print(paste0("Credentials file should be here: ", user_config_dir("r-keyring"), "/"))
+        print(paste0("Credentials file should be here: ", rappdirs::user_config_dir("r-keyring"), "/"))
         if(! is.null(key)) {
-                if(file.exists(paste0(user_config_dir("r-keyring"), "/", key, ".keyring"))) {
+                if(file.exists(paste0(rappdirs::user_config_dir("r-keyring"), "/", key, ".keyring"))) {
                         print(paste0(key, '.keyring is there.'))
                 } else {
                         print(paste0(key, '.keyring is not there.'))
@@ -118,10 +135,11 @@ multilada_credentials_file_where <- function(key = NULL) {
         }
 }
 
+#' @export
 multilada_credentials_file_get <- function(key, elements = c("host", "port", "name", "username", "password")) {
-        file_name <- paste0(user_config_dir("r-keyring"), "/", key, ".keyring")
+        file_name <- paste0(rappdirs::user_config_dir("r-keyring"), "/", key, ".keyring")
         if(! file.exists(file_name)) stop(paste(file_name, "not found."))
-        multilada_filekey <- backend_file$new(key)
+        multilada_filekey <- keyring::backend_file$new(key)
         if(! key %in% multilada_filekey$list()$service) stop(paste(file_name, "corrupted."))
         if(! all(elements %in% multilada_filekey$list()$username)) stop(paste(file_name, "corrupted."))
         credentials <- sapply(X = elements,
