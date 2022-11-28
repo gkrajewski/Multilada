@@ -1,5 +1,3 @@
-library(keyring)
-
 #' Get or set credentials securely
 #'
 #' `multilada_credentials()` gets a list of secret credentials (*elements*). It
@@ -83,17 +81,9 @@ multilada_credentials <- function(key = NULL, elements = c("host", "port", "name
                FUN = multilada_credentials_element, key, prompt, simplify = FALSE)
 }
 
-#' Title
+#' Get or set credentials securely
 #'
-#' @param element e
-#' @param key k
-#' @param prompt p
-#'
-#' @return
-#' 0
-#'
-#' @examples
-#' NULL
+#' The workhorse of `multilada_credentials()`.
 #'
 #' @export
 multilada_credentials_element <- function(element, key, prompt) {
@@ -106,6 +96,11 @@ multilada_credentials_element <- function(element, key, prompt) {
         }
 }
 
+#' Create encrypted credentials file
+#'
+#' Gets credentials securely and saves them in encrypted file.
+#' **File backend for `keyring` doesn't work on Windows**.
+#'
 #' @export
 multilada_credentials_file_set <- function(key, elements = c("host", "port", "name", "username", "password"),
                                            prompt = "Database") {
@@ -123,6 +118,10 @@ multilada_credentials_file_set <- function(key, elements = c("host", "port", "na
         print(paste("Credentials saved to", file_name))
 }
 
+#' Check encrypted credentials file's location
+#'
+#' **File backend for `keyring` doesn't work on Windows**.
+#'
 #' @export
 multilada_credentials_file_where <- function(key = NULL) {
         print(paste0("Credentials file should be here: ", rappdirs::user_config_dir("r-keyring"), "/"))
@@ -135,6 +134,10 @@ multilada_credentials_file_where <- function(key = NULL) {
         }
 }
 
+#' Get credentials from encrypted file
+#'
+#' **File backend for `keyring` doesn't work on Windows**.
+#'
 #' @export
 multilada_credentials_file_get <- function(key, elements = c("host", "port", "name", "username", "password")) {
         file_name <- paste0(rappdirs::user_config_dir("r-keyring"), "/", key, ".keyring")
