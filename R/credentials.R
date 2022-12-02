@@ -151,3 +151,30 @@ multilada_credentials_file_get <- function(key, elements = c("host", "port", "na
         return(credentials)
 }
 
+#' Connect to a Multilada database
+#'
+#' `multilada_connect()` connects to a database using a set of credentials.
+#'
+#' @param database A `character`. If provided, the function tries to retrieve credentials
+#' saved by that name in the system-based store. If not found, it asks
+#' for them securely and saves them in the store by that name.
+#' If `database = NULL` (default), the function only asks for credentials in a secure way
+#' and doesn't try to store them.
+#'
+#' @param prompt A `character`, the prefix to a prompt displayed, when the
+#' function needs to ask for credentials. It defaults to "Database" and
+#' the credentials are "host", "port", "name", "username", and "password",
+#' which means the prompts would be "Database host: " etc.
+#'
+#' @export
+multilada_connect <- function(database = NULL, prompt = "Database") {
+        credentials <- multilada_credentials(key = database, prompt = prompt)
+        dbConnect(
+                MariaDB(),
+                dbname = credentials$name,
+                username = credentials$username,
+                password = credentials$password,
+                host = credentials$host,
+                port = credentials$port
+        )
+}
