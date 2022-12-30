@@ -15,4 +15,5 @@ Imports:
     askpass,
     keyring,
     rappdirs,
-    RMariaDB
+    RMariaDB,
+    tidyverse
