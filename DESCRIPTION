@@ -15,7 +15,12 @@ Imports:
     askpass,
     dplyr,
     keyring,
+    lubridate,
     magrittr,
     rappdirs,
+    rlang,
     RMariaDB,
-    stringr
+    stats,
+    stringr,
+    tidyr,
+    tidyselect
