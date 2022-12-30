@@ -11,8 +11,8 @@ cdi_forms <- function(database = NULL) {
 cdi_read <- function(form, database = NULL) {
      statement <- paste0("SELECT * FROM `form_", form, "`")
      connection <- multilada_connect(database, "CDI database (dev or prod)")
-     cdi <- RMariaDB::dbGetQuery(connection, statement)
-     cdi <- dplyr::mutate(cdi, across(where(is.character), as.factor))
+     cdi <- RMariaDB::dbGetQuery(connection, statement) %>%
+             dplyr::mutate(cdi, across(where(is.character), as.factor))
      RMariaDB::dbDisconnect(connection)
      return(cdi)
 }
