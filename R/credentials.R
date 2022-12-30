@@ -177,8 +177,8 @@ multilada_credentials_file_get <- function(key, elements = c("host", "port", "na
 #' @export
 multilada_connect <- function(database = NULL, prompt = "Database") {
         credentials <- multilada_credentials(key = database, prompt = prompt)
-        dbConnect(
-                MariaDB(),
+        RMariaDB::dbConnect(
+                RMariaDB::MariaDB(),
                 dbname = credentials$name,
                 username = credentials$username,
                 password = credentials$password,

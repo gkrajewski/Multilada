@@ -7,5 +7,5 @@
 multilada_credentials_element(element, key, prompt)
 }
 \description{
-The workhorse of \code{multilada_credentials()}.
+The workhorse of \code{\link[=multilada_credentials]{multilada_credentials()}}.
 }

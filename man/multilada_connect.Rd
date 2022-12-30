@@ -11,19 +11,22 @@ multilada_connect(database = NULL, prompt = "Database")
 saved by that name in the system-based store. If not found, it asks
 for them securely and saves them in the store by that name.
 If \code{database = NULL} (default), the function only asks for credentials in a secure way
-and doesn't try to store them.}
+and doesn't try to store them. See \code{\link[=multilada_credentials]{multilada_credentials()}} for more details.}
 
 \item{prompt}{A \code{character}, the prefix to a prompt displayed, when the
 function needs to ask for credentials. It defaults to "Database" and
 the credentials are "host", "port", "name", "username", and "password",
-which means the prompts would be "Database host: " etc.}
+which means the prompts would be "Database host: " etc.
+See \code{\link[=multilada_credentials]{multilada_credentials()}} for more details.}
 }
 \value{
-An object returned by \link[DBI:dbConnect]{DBI::dbConnect}.
+An object returned by \code{\link[DBI:dbConnect]{DBI::dbConnect()}}.
 It's used to communicate with the engine of the database
 we want to connect to and as such is
 needed by several our functions \link{to be linked here}.
 }
 \description{
 \code{multilada_connect()} connects to a database using a set of credentials.
+For the getting/setting credentials part, see \code{\link[=multilada_credentials]{multilada_credentials()}}.
+For the actual connection, see \code{\link[DBI:dbConnect]{DBI::dbConnect()}}.
 }
