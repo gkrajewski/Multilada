@@ -83,7 +83,7 @@ multilada_credentials <- function(key = NULL, elements = c("host", "port", "name
 
 #' Get or set credentials securely
 #'
-#' The workhorse of [`multilada_credentials()`].
+#' The workhorse of [multilada_credentials()].
 #'
 #' @export
 multilada_credentials_element <- function(element, key, prompt) {
@@ -154,6 +154,7 @@ multilada_credentials_file_get <- function(key, elements = c("host", "port", "na
 #' Connect to a Multilada database
 #'
 #' `multilada_connect()` connects to a database using a set of credentials.
+#' It is usually wrapped by other higher level
 #' For the getting/setting credentials part, see [multilada_credentials()].
 #' For the actual connection, see [DBI::dbConnect()].
 #'
@@ -172,7 +173,9 @@ multilada_credentials_file_get <- function(key, elements = c("host", "port", "na
 #' @returns An object returned by [DBI::dbConnect()].
 #' It's used to communicate with the engine of the database
 #' we want to connect to and as such is
-#' needed by several our functions [to be linked here].
+#' needed by several our functions.
+#'
+#' @seealso [cdi_forms()] and [cdi_read()]
 #'
 #' @export
 multilada_connect <- function(database = NULL, prompt = "Database") {

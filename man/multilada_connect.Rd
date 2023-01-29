@@ -23,10 +23,14 @@ See \code{\link[=multilada_credentials]{multilada_credentials()}} for more detai
 An object returned by \code{\link[DBI:dbConnect]{DBI::dbConnect()}}.
 It's used to communicate with the engine of the database
 we want to connect to and as such is
-needed by several our functions \link{to be linked here}.
+needed by several our functions.
 }
 \description{
 \code{multilada_connect()} connects to a database using a set of credentials.
+It is usually wrapped by other higher level
 For the getting/setting credentials part, see \code{\link[=multilada_credentials]{multilada_credentials()}}.
 For the actual connection, see \code{\link[DBI:dbConnect]{DBI::dbConnect()}}.
+}
+\seealso{
+\code{\link[=cdi_forms]{cdi_forms()}} and \code{\link[=cdi_read]{cdi_read()}}
 }
