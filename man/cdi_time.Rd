@@ -2,7 +2,7 @@
 % Please edit documentation in R/cdi.R
 \name{cdi_time}
 \alias{cdi_time}
-\title{List IDs of all submissions together with start dates and filling times}
+\title{List IDs of all submissions together with start dates, end dates, and filling times}
 \usage{
 cdi_time(data)
 }
@@ -12,7 +12,8 @@ e.g., as returned by \code{\link[=cdi_read]{cdi_read()}} (or obtained otherwise)
 }
 \value{
 A \code{tibble} with columns: "id", "start" ("start_date" in the \code{data} dataframe),
-and "duration" (difference between "end_date" and "start_date" in the \code{data} dataframe)
+"end" ("end_date" in the \code{data} dataframe), and "duration"
+(difference between "end_date" and "start_date" in the \code{data} dataframe).
 }
 \description{
 Useful to get a summary of submissions.

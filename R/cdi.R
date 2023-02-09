@@ -62,19 +62,22 @@ cdi_read <- function(database = NULL, form) {
      return(cdi)
 }
 
-#' List IDs of all submissions together with start dates and filling times
+#' List IDs of all submissions together with start dates, end dates, and filling times
 #'
 #' Useful to get a summary of submissions.
 #'
 #' @inheritParams cdi_count_checkboxAlt
 #'
 #' @returns A `tibble` with columns: "id", "start" ("start_date" in the `data` dataframe),
-#'   and "duration" (difference between "end_date" and "start_date" in the `data` dataframe)
+#'   "end" ("end_date" in the `data` dataframe), and "duration"
+#'   (difference between "end_date" and "start_date" in the `data` dataframe).
 #'
 #' @export
 cdi_time <- function(data) {
         data %>% dplyr::group_by(.data$id) %>%
-                dplyr::summarise(start = .data$start_date, duration = lubridate::as.duration(.data$end_date - .data$start_date)) %>%
+                dplyr::summarise(start = .data$start_date,
+                                 end = .data$end_date,
+                                 duration = lubridate::as.duration(.data$end_date - .data$start_date)) %>%
                 dplyr::distinct() %>% dplyr::arrange(.data$start)
 }
 
