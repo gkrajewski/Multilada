@@ -167,4 +167,36 @@ cdi_count_oneCheckboxGroup <- function(data, type, category = NULL) {
                 tidyr::replace_na(list(n = 0))
 }
 
+#' Add item definitions to `oneCheckboxGroup` data
+#'
+#' Results for `oneCheckboxGroup` items (e.g., word lists in *CDI:WS*, *CDI-III*)
+#' contain only checked items with their sequence numbers within a category, i.e., a single page
+#' without the rest of items, item definitions and sequence numbers within a whole type,
+#' i.e., a CDI section. `cdi_itemise_oneCheckboxGroup()` adds these missing information,
+#' which is helpful for item-level analyses.
+#'
+#' @inheritParams cdi_count_checkboxAlt
+#'
+#' @param items A `dataframe` containing item definitions for a *CDI-Online* form, e.g., as imported from
+#'   `items.csv` file found in the appropriate subfolder of `www/languages/` in your *CDI-Online* installation
+#'   (required columns are `type`, `category`, and `definition`).
+#'
+#' @returns A `dataframe` with columns: "id", "type", "category", "item_id" (sequence number within type),
+#' "response" (0 or 1), and "definition", as well as any other columns contained in `items`.
+#'
+#' @export
+cdi_itemise_oneCheckboxGroup <- function(data, items) {
+        items %>% dplyr::filter(.data$type == "word") %>%
+                dplyr::group_by(.data$category) %>%
+                dplyr::mutate(item_id = dplyr::row_number()) -> items
+        data %>% dplyr::filter(.data$type == "word" & .data$answer_type == "oneCheckboxGroup") %>%
+                dplyr::select(.data$id, .data$type, .data$category, .data$answer1, .data$answer2) -> data
+        data$answer1 <- as.integer(as.character(data$answer1)) # Comments are saved in this column as well
+        data$answer2 <- 1 # For proper response coding (1 vs 0)
+        data %>% dplyr::group_by(.data$id) %>% dplyr::group_modify(~
+                dplyr::full_join(.x, items, by = c("type" = "type", "category" = "category", "answer1" = "item_id"))
+        ) -> data
+        data %>% dplyr::rename(item_id = .data$answer1, response = .data$answer2) %>% tidyr::replace_na(list(response=0))
+}
+
 #' @importFrom rlang .data
