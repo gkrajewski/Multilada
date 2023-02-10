@@ -85,6 +85,13 @@ multilada_credentials <- function(key = NULL, elements = c("host", "port", "name
 #'
 #' The workhorse of [multilada_credentials()].
 #'
+#' @inheritParams multilada_credentials
+#'
+#' @param element A `character` specifying the credential (e.g., "host", "port", "username"),
+#'   usually passed on by [multilada_credentials()].
+#'
+#' @returns A *secret* for for given *element* returned as unmasked `character` (i.e., plain text).
+#'
 #' @export
 multilada_credentials_element <- function(element, key, prompt) {
         full_prompt <- paste0(prompt, " ", element, ": ")

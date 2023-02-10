@@ -6,6 +6,38 @@
 \usage{
 multilada_credentials_element(element, key, prompt)
 }
+\arguments{
+\item{element}{A \code{character} specifying the credential (e.g., "host", "port", "username"),
+usually passed on by \code{\link[=multilada_credentials]{multilada_credentials()}}.}
+
+\item{key}{A \code{character}, the identifier of all \emph{elements} that go together,
+e.g., it could be "pn-recruitment" for all credentials needed to access the
+PolkaNorski recruitment database.
+
+If \code{key = NULL} (the default), the function only asks for the \emph{secret} for
+each \emph{element} (in a secure way, e.g., masking the responses as they are
+typed), without using the system credential store (and package \code{keyring}).
+
+If \code{key} is provided and there is a \emph{secret} stored for a given \emph{element}
+and a given \emph{key} in the system credential store, the \emph{secret} is
+retrieved. Otherwise, the function asks for the \emph{secret} for that \emph{element}
+(in a secure way, e.g., masking the responses as they are typed) and saves
+it in the system credential store.
+
+In the \code{keyring} package \code{key} is called a \emph{service}, in macOS Keychain it
+is a \emph{name} etc.}
+
+\item{prompt}{A \code{character}, the prefix to a prompt displayed, when the
+function needs to ask for a \emph{secret} for a given \emph{element} (either because
+\code{key = NULL}, or because there is no \emph{secret} for a given \emph{element} and a
+given \emph{key}).
+
+Defaults to "Database" which, when asking for, e.g., the "host", would
+display "Database host: " as the promopt.}
+}
+\value{
+A \emph{secret} for for given \emph{element} returned as unmasked \code{character} (i.e., plain text).
+}
 \description{
 The workhorse of \code{\link[=multilada_credentials]{multilada_credentials()}}.
 }

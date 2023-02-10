@@ -8,6 +8,8 @@
 #'   and ultimately [multilada_credentials()] for dealing with database credentials.
 #'   Check the latter to better understand the credentials asking/saving/retrieving details.
 #'
+#' @importFrom rlang .data
+#'
 #' @param database A `character` identifying a Multilada database or, to be precise,
 #'   all secret credentials needed to connect to the database (e.g., "host", "port").
 #'   If `database = NULL` (the default), you are asked to provide each credential when prompted.
@@ -198,5 +200,3 @@ cdi_itemise_oneCheckboxGroup <- function(data, items) {
         ) -> data
         data %>% dplyr::rename(item_id = .data$answer1, response = .data$answer2) %>% tidyr::replace_na(list(response=0))
 }
-
-#' @importFrom rlang .data
