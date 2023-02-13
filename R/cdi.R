@@ -67,21 +67,36 @@ cdi_read <- function(database = NULL, form) {
 #' List IDs of all submissions together with start dates, end dates, and filling times
 #'
 #' Useful to get a summary of submissions.
+#' `cdi_time()` is an alias for backward compatibility.
 #'
 #' @inheritParams cdi_count_checkboxAlt
 #'
+#' @param run A logical value indicating whether to include column "run".
+#'
+#' @param sort.by.end A logical value indicating whether to sort by end date
+#'   (by default the resulting `tibble` is sorted by start date).
+#'
 #' @returns A `tibble` with columns: "id", "start" ("start_date" in the `data` dataframe),
-#'   "end" ("end_date" in the `data` dataframe), and "duration"
-#'   (difference between "end_date" and "start_date" in the `data` dataframe).
+#'   "end" ("end_date" in the `data` dataframe), "duration"
+#'   (difference between "end_date" and "start_date" in the `data` dataframe), and
+#'   optionally "run".
 #'
 #' @export
-cdi_time <- function(data) {
+cdi_submissions <- function(data, run = FALSE, sort.by.end = FALSE) {
         data %>% dplyr::group_by(.data$id) %>%
-                dplyr::summarise(start = .data$start_date,
+                dplyr::summarise(run = .data$run,
+                                 start = .data$start_date,
                                  end = .data$end_date,
                                  duration = lubridate::as.duration(.data$end_date - .data$start_date)) %>%
-                dplyr::distinct() %>% dplyr::arrange(.data$start)
+                dplyr::distinct() -> data
+        if(! run) data %>% dplyr::select(- .data$run) -> data
+        if(sort.by.end) data %>% dplyr::arrange(.data$end) else
+                        data %>% dplyr::arrange(.data$start)
 }
+
+#' @rdname cdi_submissions
+#' @export
+cdi_time <- cdi_submissions
 
 #' Count responses to given question type in CDI-Online form
 #'
