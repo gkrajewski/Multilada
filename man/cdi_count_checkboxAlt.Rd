@@ -2,11 +2,14 @@
 % Please edit documentation in R/cdi.R
 \name{cdi_count_checkboxAlt}
 \alias{cdi_count_checkboxAlt}
+\alias{cdi_count_manyCheckboxGroups}
 \alias{cdi_count_radio}
 \alias{cdi_count_oneCheckboxGroup}
 \title{Count responses to given question type in CDI-Online form}
 \usage{
 cdi_count_checkboxAlt(data, type, category = NULL, answer = "first")
+
+cdi_count_manyCheckboxGroups(data, type, category = NULL, answer = "first")
 
 cdi_count_radio(data, type, category = NULL, answer = "1")
 
@@ -23,10 +26,13 @@ e.g., "word" for \code{oneCheckboxGroup}, "alternatives" for \code{checkboxAlt}.
 e.g., "animals", "action_words", or "quantifiers" for the type "word" in \emph{CDI:WG} or \emph{CDI:WS}.
 If set, only answers in this category are counted. Otherwise answers for the whole type are considered.}
 
-\item{answer}{A \code{character} specifing which asnwers to count. Possible values are
-"first" (default), "second", "both", or "none" for \code{checkboxAlt}, and a number
-(hopefully coerced to \code{character}) for \code{radio}, defaulting to "1"
-(which usually coes "yes" in \emph{yes or no} questions).}
+\item{answer}{A \code{character} specifing which asnwers to count.
+For \code{checkboxAlt} and \code{manyCheckboxGroups} possible values are
+"first" (default), "second", "both", or "none"
+(for \code{manyCheckboxGroups} "first" usually means \emph{understands} and "second" means \emph{produces}),
+For \code{radio} it should be an integer
+(coerced to \code{character}) indicating the option to count and defaulting to "1"
+(which usually codes "yes" in \emph{yes or no} questions).}
 }
 \value{
 A \code{dataframe} with columns: "id", "n" (resulting count), "type" (the argument to the function,
@@ -37,6 +43,7 @@ These functions count (given) responses to questions of a given type for each ID
 Types (aka \code{answer_type}s) implemented so far are:
 \itemize{
 \item \code{oneCheckboxGroup}: type used for simple checkbox lists (e.g., word lists in \emph{CDI:WS}, \emph{CDI-III});
+\item \code{manyCheckboxGroups}: type used for checkbox lists with two options (e.g., word list in \emph{CDI:WG});
 \item \code{checkboxAlt}: type used for checkbox alternatives (e.g., some \emph{Complexity} sections);
 \item \code{radio}: traditional radio button question type.
 }

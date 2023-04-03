@@ -103,6 +103,7 @@ cdi_time <- cdi_submissions
 #' These functions count (given) responses to questions of a given type for each ID.
 #' Types (aka `answer_type`s) implemented so far are:
 #' * `oneCheckboxGroup`: type used for simple checkbox lists (e.g., word lists in *CDI:WS*, *CDI-III*);
+#' * `manyCheckboxGroups`: type used for checkbox lists with two options (e.g., word list in *CDI:WG*);
 #' * `checkboxAlt`: type used for checkbox alternatives (e.g., some *Complexity* sections);
 #' * `radio`: traditional radio button question type.
 #'
@@ -116,10 +117,13 @@ cdi_time <- cdi_submissions
 #'   e.g., "animals", "action_words", or "quantifiers" for the type "word" in *CDI:WG* or *CDI:WS*.
 #'   If set, only answers in this category are counted. Otherwise answers for the whole type are considered.
 #'
-#' @param answer A `character` specifing which asnwers to count. Possible values are
-#'   "first" (default), "second", "both", or "none" for `checkboxAlt`, and a number
-#'   (hopefully coerced to `character`) for `radio`, defaulting to "1"
-#'   (which usually coes "yes" in *yes or no* questions).
+#' @param answer A `character` specifing which asnwers to count.
+#'   For `checkboxAlt` and `manyCheckboxGroups` possible values are
+#'   "first" (default), "second", "both", or "none" 
+#'   (for `manyCheckboxGroups` "first" usually means *understands* and "second" means *produces*),
+#'   For `radio` it should be an integer
+#'   (coerced to `character`) indicating the option to count and defaulting to "1"
+#'   (which usually codes "yes" in *yes or no* questions).
 #'
 #' @details To find out what `type` or `category` you are looking for, check the `data` dataframe or
 #'  `items.csv` for a given form in the `www/languages/` of your *CDI-Online* installation.
@@ -148,6 +152,22 @@ cdi_time <- cdi_submissions
 cdi_count_checkboxAlt <- function(data, type, category = NULL, answer = "first") {
         data %>% dplyr::select(.data$id) %>% dplyr::distinct() -> id
         data %>% dplyr::filter(.data$type == {{type}} & .data$answer_type == "checkboxAlt") -> data
+        if(! is.null(category)) data %>% dplyr::filter(.data$category == {{category}}) -> data
+        if(answer == "first") data %>% dplyr::filter(.data$answer1 == "1") -> data
+        if(answer == "second") data %>% dplyr::filter(.data$answer2 == "1") -> data
+        if(answer == "both") data %>% dplyr::filter(.data$answer1 == "1" & .data$answer2 == "1") -> data
+        if(answer == "none") data %>% dplyr::filter(.data$answer1 == "0" & is.na(.data$answer2)) -> data
+        data %>% dplyr::group_by(.data$id) %>% dplyr::count() -> data
+        dplyr::left_join(id, data) -> data
+        data %>% dplyr::mutate(answer = answer, category = category, type = type) %>%
+                tidyr::replace_na(list(n = 0))
+}
+
+#' @rdname cdi_count_checkboxAlt
+#' @export
+cdi_count_manyCheckboxGroups <- function(data, type, category = NULL, answer = "first") {
+        data %>% dplyr::select(.data$id) %>% dplyr::distinct() -> id
+        data %>% dplyr::filter(.data$type == {{type}} & .data$answer_type == "manyCheckboxGroups") -> data
         if(! is.null(category)) data %>% dplyr::filter(.data$category == {{category}}) -> data
         if(answer == "first") data %>% dplyr::filter(.data$answer1 == "1") -> data
         if(answer == "second") data %>% dplyr::filter(.data$answer2 == "1") -> data

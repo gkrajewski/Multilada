@@ -2,6 +2,7 @@
 
 export("%>%")
 export(cdi_count_checkboxAlt)
+export(cdi_count_manyCheckboxGroups)
 export(cdi_count_oneCheckboxGroup)
 export(cdi_count_radio)
 export(cdi_forms)
