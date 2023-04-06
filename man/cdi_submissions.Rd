@@ -5,15 +5,17 @@
 \alias{cdi_time}
 \title{List IDs of all submissions together with start dates, end dates, and filling times}
 \usage{
-cdi_submissions(data, run = FALSE, sort.by.end = FALSE)
+cdi_submissions(data, run = FALSE, form = FALSE, sort.by.end = FALSE)
 
-cdi_time(data, run = FALSE, sort.by.end = FALSE)
+cdi_time(data, run = FALSE, form = FALSE, sort.by.end = FALSE)
 }
 \arguments{
 \item{data}{A \code{dataframe} containing answers to a \emph{CDI-Online} form,
 e.g., as returned by \code{\link[=cdi_read]{cdi_read()}} (or obtained otherwise).}
 
 \item{run}{A logical value indicating whether to include column "run".}
+
+\item{form}{A logical value indicating whether to include column "form".}
 
 \item{sort.by.end}{A logical value indicating whether to sort by end date
 (by default the resulting \code{tibble} is sorted by start date).}

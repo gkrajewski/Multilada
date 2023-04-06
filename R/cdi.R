@@ -73,6 +73,8 @@ cdi_read <- function(database = NULL, form) {
 #'
 #' @param run A logical value indicating whether to include column "run".
 #'
+#' @param form A logical value indicating whether to include column "form".
+#'
 #' @param sort.by.end A logical value indicating whether to sort by end date
 #'   (by default the resulting `tibble` is sorted by start date).
 #'
@@ -82,14 +84,16 @@ cdi_read <- function(database = NULL, form) {
 #'   optionally "run".
 #'
 #' @export
-cdi_submissions <- function(data, run = FALSE, sort.by.end = FALSE) {
+cdi_submissions <- function(data, run = FALSE, form = FALSE, sort.by.end = FALSE) {
         data %>% dplyr::group_by(.data$id) %>%
                 dplyr::summarise(run = .data$run,
+                                 form = .data$form,
                                  start = .data$start_date,
                                  end = .data$end_date,
                                  duration = lubridate::as.duration(.data$end_date - .data$start_date)) %>%
                 dplyr::distinct() -> data
         if(! run) data %>% dplyr::select(- .data$run) -> data
+        if(! form) data %>% dplyr::select(- .data$form) -> data
         if(sort.by.end) data %>% dplyr::arrange(.data$end) else
                         data %>% dplyr::arrange(.data$start)
 }
@@ -119,7 +123,7 @@ cdi_time <- cdi_submissions
 #'
 #' @param answer A `character` specifing which asnwers to count.
 #'   For `checkboxAlt` and `manyCheckboxGroups` possible values are
-#'   "first" (default), "second", "both", or "none" 
+#'   "first" (default), "second", "both", or "none"
 #'   (for `manyCheckboxGroups` "first" usually means *understands* and "second" means *produces*),
 #'   For `radio` it should be an integer
 #'   (coerced to `character`) indicating the option to count and defaulting to "1"
