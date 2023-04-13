@@ -7,7 +7,7 @@
 \alias{cdi_count_oneCheckboxGroup}
 \title{Count responses to given question type in CDI-Online form}
 \usage{
-cdi_count_checkboxAlt(data, type, category = NULL, answer = "first")
+cdi_count_checkboxAlt(data, type, category = NULL, answer = "second")
 
 cdi_count_manyCheckboxGroups(data, type, category = NULL, answer = "first")
 
@@ -28,8 +28,9 @@ If set, only answers in this category are counted. Otherwise answers for the who
 
 \item{answer}{A \code{character} specifing which asnwers to count.
 For \code{checkboxAlt} and \code{manyCheckboxGroups} possible values are
-"first" (default), "second", "both", or "none"
-(for \code{manyCheckboxGroups} "first" usually means \emph{understands} and "second" means \emph{produces}),
+"first", "second", "both", or "none".
+For \code{manyCheckboxGroups} "first", default, usually means \emph{understands} and "second" means \emph{produces}.
+For \code{checkboxAlt} "second", default, usually means more complex alternative and "first" means the simpler one.
 For \code{radio} it should be an integer
 (coerced to \code{character}) indicating the option to count and defaulting to "1"
 (which usually codes "yes" in \emph{yes or no} questions).}

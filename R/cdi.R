@@ -123,8 +123,9 @@ cdi_time <- cdi_submissions
 #'
 #' @param answer A `character` specifing which asnwers to count.
 #'   For `checkboxAlt` and `manyCheckboxGroups` possible values are
-#'   "first" (default), "second", "both", or "none"
-#'   (for `manyCheckboxGroups` "first" usually means *understands* and "second" means *produces*),
+#'   "first", "second", "both", or "none".
+#'   For `manyCheckboxGroups` "first", default, usually means *understands* and "second" means *produces*.
+#'   For `checkboxAlt` "second", default, usually means more complex alternative and "first" means the simpler one.
 #'   For `radio` it should be an integer
 #'   (coerced to `character`) indicating the option to count and defaulting to "1"
 #'   (which usually codes "yes" in *yes or no* questions).
@@ -153,7 +154,7 @@ cdi_time <- cdi_submissions
 #' }
 #'
 #' @export
-cdi_count_checkboxAlt <- function(data, type, category = NULL, answer = "first") {
+cdi_count_checkboxAlt <- function(data, type, category = NULL, answer = "second") {
         data %>% dplyr::select(.data$id) %>% dplyr::distinct() -> id
         data %>% dplyr::filter(.data$type == {{type}} & .data$answer_type == "checkboxAlt") -> data
         if(! is.null(category)) data %>% dplyr::filter(.data$category == {{category}}) -> data
