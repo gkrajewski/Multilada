@@ -85,13 +85,11 @@ cdi_read <- function(database = NULL, form) {
 #'
 #' @export
 cdi_submissions <- function(data, run = FALSE, form = FALSE, sort.by.end = FALSE) {
-        data %>% dplyr::group_by(.data$id) %>%
-                dplyr::summarise(run = .data$run,
-                                 form = .data$form,
-                                 start = .data$start_date,
-                                 end = .data$end_date,
-                                 duration = lubridate::as.duration(.data$end_date - .data$start_date)) %>%
-                dplyr::distinct() -> data
+        data %>% dplyr::rename(start = .data$start_date,
+                               end = .data$end_date) %>%
+                 dplyr::select(.data$id, .data$run, .data$form, .data$start, .data$end) %>%
+                 dplyr::mutate(duration = lubridate::as.duration(.data$end - .data$start)) %>%
+                 dplyr::distinct() -> data
         if(! run) data %>% dplyr::select(- .data$run) -> data
         if(! form) data %>% dplyr::select(- .data$form) -> data
         if(sort.by.end) data %>% dplyr::arrange(.data$end) else
