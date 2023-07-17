@@ -3,7 +3,7 @@
 \name{cdi_submissions}
 \alias{cdi_submissions}
 \alias{cdi_time}
-\title{List IDs of all submissions together with start dates, end dates, and filling times}
+\title{Summarise all submissions}
 \usage{
 cdi_submissions(data, run = FALSE, form = FALSE, sort.by.end = FALSE)
 
@@ -21,12 +21,19 @@ e.g., as returned by \code{\link[=cdi_read]{cdi_read()}} (or obtained otherwise)
 (by default the resulting \code{tibble} is sorted by start date).}
 }
 \value{
-A \code{tibble} with columns: "id", "start" ("start_date" in the \code{data} dataframe),
+A \code{tibble} with the following columns:
+\itemize{
+\item "id",
+\item "birth_date", "sex", and "guardian" (\emph{What is your relationship to the child?}),
+if relevant data collected for a given form
+("demographic" input type in \code{settings.csv}),
+\item optionally "run" and "form",
+\item "start" ("start_date" in the \code{data} dataframe),
 "end" ("end_date" in the \code{data} dataframe), "duration"
-(difference between "end_date" and "start_date" in the \code{data} dataframe), and
-optionally "run".
+(difference between "end_date" and "start_date" in the \code{data} dataframe).
+}
 }
 \description{
-Useful to get a summary of submissions.
+Useful to get a list of IDs together with basic stats.
 \code{cdi_time()} is an alias for backward compatibility.
 }
