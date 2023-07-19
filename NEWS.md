@@ -1,6 +1,7 @@
 # Multilada (development version)
 
 * Demographic data included in `cdi_submissions()` (when available).
+* Package file structure improved.
 
 # Multilada 0.1.0
 
