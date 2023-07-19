@@ -2,6 +2,7 @@
 
 * Demographic data included in `cdi_submissions()` (when available).
 * Package file structure improved.
+* Multiple submissions with same ID handled.
 
 # Multilada 0.1.0
 
