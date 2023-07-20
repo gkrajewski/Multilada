@@ -1,8 +1,9 @@
-# Multilada (development version)
+# Multilada 0.2.0
 
 * Demographic data included in `cdi_submissions()` (when available).
 * Package file structure improved.
 * Multiple submissions with same ID handled.
+* Proper age in months calculation with `age_months()`.
 
 # Multilada 0.1.0
 
