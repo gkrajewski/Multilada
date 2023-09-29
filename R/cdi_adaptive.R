@@ -13,7 +13,7 @@
 #'
 #' @export
 cdi_adaptive <- function(data) {
-     ws_cat %>% dplyr::filter(.data$final == 1) %>%
+     data %>% dplyr::filter(.data$final == 1) %>%
           dplyr::rename(id = .data$idx, sex = .data$gender, birth_date = .data$birth, no_items = .data$q_id,
                         guardian = .data$filler, start = .data$start_date, end = .data$end_date) %>%
           dplyr::mutate(duration = lubridate::as.duration(.data$end - .data$start)) %>%
