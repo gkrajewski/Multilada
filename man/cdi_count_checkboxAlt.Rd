@@ -16,8 +16,8 @@ cdi_count_radio(data, type, category = NULL, answer = "1")
 cdi_count_oneCheckboxGroup(data, type, category = NULL)
 }
 \arguments{
-\item{data}{A \code{dataframe} containing answers to a \emph{CDI-Online} form,
-e.g., as returned by \code{\link[=cdi_read]{cdi_read()}} (or obtained otherwise).}
+\item{data}{A \code{dataframe} containing answers to a \emph{CDI-Online} \strong{static} form,
+as returned by \code{\link[=cdi_read]{cdi_read()}} (or obtained otherwise).}
 
 \item{type}{A \code{character}, the value of the \code{type} column of the \code{data} dataframe,
 e.g., "word" for \code{oneCheckboxGroup}, "alternatives" for \code{checkboxAlt}.}

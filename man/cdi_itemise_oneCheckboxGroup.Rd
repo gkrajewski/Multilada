@@ -7,8 +7,8 @@
 cdi_itemise_oneCheckboxGroup(data, items)
 }
 \arguments{
-\item{data}{A \code{dataframe} containing answers to a \emph{CDI-Online} form,
-e.g., as returned by \code{\link[=cdi_read]{cdi_read()}} (or obtained otherwise).}
+\item{data}{A \code{dataframe} containing answers to a \emph{CDI-Online} \strong{static} form,
+as returned by \code{\link[=cdi_read]{cdi_read()}} (or obtained otherwise).}
 
 \item{items}{A \code{dataframe} containing item definitions for a \emph{CDI-Online} form, e.g., as imported from
 \code{items.csv} file found in the appropriate subfolder of \verb{www/languages/} in your \emph{CDI-Online} installation

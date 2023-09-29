@@ -7,8 +7,8 @@
 #' * `checkboxAlt`: type used for checkbox alternatives (e.g., some *Complexity* sections);
 #' * `radio`: traditional radio button question type.
 #'
-#' @param data A `dataframe` containing answers to a *CDI-Online* form,
-#'   e.g., as returned by [cdi_read()] (or obtained otherwise).
+#' @param data A `dataframe` containing answers to a *CDI-Online* **static** form,
+#'   as returned by [cdi_read()] (or obtained otherwise).
 #'
 #' @param type A `character`, the value of the `type` column of the `data` dataframe,
 #'   e.g., "word" for `oneCheckboxGroup`, "alternatives" for `checkboxAlt`.
