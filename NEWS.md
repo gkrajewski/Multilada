@@ -1,3 +1,7 @@
+# Multilada 0.3.0
+
+* `cdi_adaptive()` to summarise adaptive CDIs. submissions
+
 # Multilada 0.2.0
 
 * Demographic data included in `cdi_submissions()` (when available).
