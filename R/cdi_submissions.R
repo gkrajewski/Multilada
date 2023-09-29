@@ -15,31 +15,28 @@
 #' @returns A `tibble` with the following columns:
 #'   - "id",
 #'   - optionally "run" and "form",
-#'   - "start" ("start_date" in the `data` dataframe),
-#'   "end" ("end_date" in the `data` dataframe), "duration"
-#'   (difference between "end_date" and "start_date" in the `data` dataframe),
+#'   - "start_date", "end_date", "duration"
+#'   (difference between "end_date" and "start_date"),
 #'   - "birth_date", "sex", "guardian" (*What is your relationship to the child?*),
 #'   and possibly "guardian.other", if relevant data collected for a given form
 #'   ("demographic" input type in `settings.csv`).
 #'
 #' @export
 cdi_submissions <- function(data, run = FALSE, form = FALSE, sort.by.end = FALSE) {
-        data %>% dplyr::rename(start = .data$start_date,
-                               end = .data$end_date) -> data
         data %>% dplyr::filter(.data$answer_type == "demographic") %>%
-                 tidyr::pivot_wider(id_cols = c(.data$id, .data$start),
+                 tidyr::pivot_wider(id_cols = c(.data$id, .data$start_date),
                                     names_from = .data$answer_id,
                                     values_from = .data$answer1,
                                     names_repair = "universal_quiet") %>%
                  dplyr::mutate(dplyr::across(dplyr::matches("birth_date"), lubridate::ymd)) -> submissions
-        data %>% dplyr::select(.data$id, .data$run, .data$form, .data$start, .data$end) %>%
-                 dplyr::mutate(duration = lubridate::as.duration(.data$end - .data$start)) %>%
+        data %>% dplyr::select(.data$id, .data$run, .data$form, .data$start_date, .data$end_date) %>%
+                 dplyr::mutate(duration = lubridate::as.duration(.data$end_date - .data$start_date)) %>%
                  dplyr::distinct() -> data
         if(! run) data %>% dplyr::select(- .data$run) -> data
         if(! form) data %>% dplyr::select(- .data$form) -> data
         dplyr::left_join(data, submissions) -> data
-        if(sort.by.end) data %>% dplyr::arrange(.data$end) else
-                        data %>% dplyr::arrange(.data$start)
+        if(sort.by.end) data %>% dplyr::arrange(.data$end_date) else
+                        data %>% dplyr::arrange(.data$start_date)
 }
 
 #' @rdname cdi_submissions

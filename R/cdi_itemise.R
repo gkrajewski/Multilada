@@ -21,11 +21,11 @@ cdi_itemise_oneCheckboxGroup <- function(data, items) {
                 dplyr::group_by(.data$category) %>%
                 dplyr::mutate(item_id = dplyr::row_number()) -> items
         data %>% dplyr::filter(.data$type == "word" & .data$answer_type == "oneCheckboxGroup") %>%
-                dplyr::select(.data$id, .data$start_date,
+                dplyr::select(.data$id, .data$end_date,
                               .data$type, .data$category, .data$answer1, .data$answer2) -> data
         data$answer1 <- as.integer(as.character(data$answer1)) # Comments are saved in this column as well
         data$answer2 <- 1 # For proper response coding (1 vs 0)
-        data %>% dplyr::group_by(.data$id, .data$start_date) %>% dplyr::group_modify(~
+        data %>% dplyr::group_by(.data$id, .data$end_date) %>% dplyr::group_modify(~
                 dplyr::full_join(.x, items, by = c("type" = "type", "category" = "category", "answer1" = "item_id"))
         ) -> data
         data %>% dplyr::rename(item_id = .data$answer1, response = .data$answer2) %>% tidyr::replace_na(list(response=0))
@@ -48,12 +48,12 @@ cdi_itemise_checkboxAlt <- function(data, type, items) {
                 dplyr::group_by(.data$category) %>%
                 dplyr::mutate(item_id = dplyr::row_number()) -> items
         data %>% dplyr::filter(.data$type == {{type}} & .data$answer_type == "checkboxAlt") %>%
-                dplyr::select(.data$id, .data$start_date,
+                dplyr::select(.data$id, .data$end_date,
                               .data$type, .data$category, .data$answer_id, .data$answer1, .data$answer2) -> data
         data$answer1 <- as.integer(as.character(data$answer1)) # Comments are saved in this column as well
         data$answer2 <- as.integer(as.character(data$answer2)) # Not sure why it's loaded as a factor
         data$answer_id <- as.integer(as.character(data$answer_id)) # Not sure why it's loaded as a factor
-        data %>% dplyr::group_by(.data$id, .data$start_date) %>% dplyr::group_modify(~
+        data %>% dplyr::group_by(.data$id, .data$end_date) %>% dplyr::group_modify(~
                 dplyr::full_join(.x, items, by = c("type" = "type", "category" = "category", "answer_id" = "item_id"))
         ) -> data
         data %>% dplyr::rename(item_id = .data$answer_id) %>% tidyr::replace_na(list(answer2=0))
@@ -76,11 +76,11 @@ cdi_itemise_radio <- function(data, type, items) {
                 dplyr::group_by(.data$category) %>%
                 dplyr::mutate(item_id = dplyr::row_number()) -> items
         data %>% dplyr::filter(.data$type == {{type}} & .data$answer_type == "radio") %>%
-                dplyr::select(.data$id, .data$start_date,
+                dplyr::select(.data$id, .data$end_date,
                               .data$type, .data$category, .data$answer_id, .data$answer1) -> data
         data$answer1 <- as.integer(as.character(data$answer1)) # Comments are saved in this column as well
         data$answer_id <- as.integer(as.character(data$answer_id)) # Not sure why it's loaded as a factor
-        data %>% dplyr::group_by(.data$id, .data$start_date) %>% dplyr::group_modify(~
+        data %>% dplyr::group_by(.data$id, .data$end_date) %>% dplyr::group_modify(~
                 dplyr::full_join(.x, items, by = c("type" = "type", "category" = "category", "answer_id" = "item_id"))
         ) -> data
         data %>% dplyr::rename(item_id = .data$answer_id, answer = .data$answer1)

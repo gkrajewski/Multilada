@@ -14,9 +14,9 @@
 #' @export
 cdi_adaptive <- function(data) {
      data %>% dplyr::filter(.data$final == 1) %>%
-          dplyr::rename(id = .data$idx, sex = .data$gender, birth_date = .data$birth, no_items = .data$q_id,
-                        guardian = .data$filler, start = .data$start_date, end = .data$end_date) %>%
-          dplyr::mutate(duration = lubridate::as.duration(.data$end - .data$start)) %>%
-          dplyr::select(.data$id, .data$sex, .data$birth_date, .data$guardian, .data$start, .data$end,
+          dplyr::rename(id = .data$idx, sex = .data$gender, birth_date = .data$birth,
+                        no_items = .data$q_id, guardian = .data$filler) %>%
+          dplyr::mutate(duration = lubridate::as.duration(.data$end_date - .data$start_date)) %>%
+          dplyr::select(.data$id, .data$sex, .data$birth_date, .data$guardian, .data$start_date, .data$end_date,
                         .data$duration, .data$group, .data$start_theta, .data$no_items, .data$theta, .data$se_theta)
 }
