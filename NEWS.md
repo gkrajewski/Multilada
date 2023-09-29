@@ -1,4 +1,8 @@
-# Multilada (development version)
+# Multilada 0.3.1
+
+* [Multiple submissions differentiated by `end_date`,
+rather than `start_date`](https://github.com/gkrajewski/Multilada/issues/7)
+* [`start` and `end` not renamed to `start_date` and `end_date`](https://github.com/gkrajewski/Multilada/issues/7)
 
 # Multilada 0.3.0
 
