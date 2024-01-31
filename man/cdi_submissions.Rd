@@ -25,9 +25,8 @@ A \code{tibble} with the following columns:
 \itemize{
 \item "id",
 \item optionally "run" and "form",
-\item "start" ("start_date" in the \code{data} dataframe),
-"end" ("end_date" in the \code{data} dataframe), "duration"
-(difference between "end_date" and "start_date" in the \code{data} dataframe),
+\item "start_date", "end_date", "duration"
+(difference between "end_date" and "start_date"),
 \item "birth_date", "sex", "guardian" (\emph{What is your relationship to the child?}),
 and possibly "guardian.other", if relevant data collected for a given form
 ("demographic" input type in \code{settings.csv}).
