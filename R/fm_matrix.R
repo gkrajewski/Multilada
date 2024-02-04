@@ -25,19 +25,18 @@ fm_matrix <- function(data, names_prefix = NULL, keep = FALSE) {
                                =(?<response>[01])", comments = TRUE)
 
      stringr::str_match_all(data[, 2], pattern) %>% purrr::map(function(x) {
-          dplyr::as_tibble(x[, -1]) %>%
-               dplyr::group_by(.data$varname) %>%
-               dplyr::group_map(~ {
-                    dplyr::bind_cols(.y, .x[.x$response == "1", "value"])
-               }) %>% purrr::list_rbind()
+          as.data.frame(x) %>%
+               dplyr::select(- .data$V1) %>%
+               dplyr::filter(.data$response == 1) %>%
+               dplyr::select(- .data$response)
      }) %>% purrr::list_rbind(names_to = "rowid") %>%
           tidyr::pivot_wider(names_from = .data$varname, values_from = .data$value,
                              names_prefix = paste0(names_prefix, "_"),
-                             names_repair = "universal_quiet",
-                             names_sort = TRUE) -> result
+                             names_repair = "universal_quiet") -> result
 
-     if(! keep) data %>% select(1) -> data
-     data %>% rowid_to_column() %>%
-          left_join(result, by = "rowid") %>%
-          arrange(rowid) %>% select(- rowid)
+     if(! keep) data %>% dplyr::select(1) -> data
+     data %>% tibble::rowid_to_column() %>%
+          dplyr::left_join(result, by = "rowid") %>%
+          dplyr::arrange(.data$rowid) %>%
+          dplyr::select(- .data$rowid)
 }
