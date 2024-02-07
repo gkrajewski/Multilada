@@ -18,9 +18,9 @@
 #'
 #' @export
 fm_read <- function(data_file, variables_file, translations_file = NULL, lang) {
-     data <- read.csv(data_file)
+     data <- utils::read.csv(data_file)
 
-     keys <- read.csv(variables_file)
+     keys <- utils::read.csv(variables_file)
      keys <- keys[keys$Label != "", ]
      keys <- keys[keys$If.needed != "", ]
 
@@ -28,7 +28,7 @@ fm_read <- function(data_file, variables_file, translations_file = NULL, lang) {
      data <- data %>% dplyr::select(tidyselect::any_of(keys$Label))
 
      if(! is.null(translations_file)) {
-          trans <- read.csv(translations_file)
+          trans <- utils::read.csv(translations_file)
           trans$x <- trans[, lang]
           trans <- trans[, c("Translation", "x")]
 
