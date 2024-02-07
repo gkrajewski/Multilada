@@ -2,9 +2,9 @@
 #'
 #' Matrix questions...
 #'
-#' @param data
-#' @param names_prefix
-#' @param keep
+#' @param data blah
+#' @param names_prefix blah
+#' @param keep blah
 #'
 #' @details
 #' Additional details...
