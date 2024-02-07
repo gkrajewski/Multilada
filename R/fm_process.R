@@ -47,7 +47,7 @@ fm_grading <- function(data, names_prefix = NULL, keep = FALSE) {
      if(is.null(names_prefix)) colnames(data)[2] -> names_prefix
      pattern <- stringr::regex("(?<varname>[^:, ]+?)
                                :\\s
-                               (?<value>[^:, ]+?)
+                               (?<value>[^:, ]*?)
                                ,\\s", comments = TRUE)
 
      stringr::str_match_all(data[, 2], pattern) %>% purrr::map(function(x) {
@@ -56,7 +56,8 @@ fm_grading <- function(data, names_prefix = NULL, keep = FALSE) {
      }) %>% purrr::list_rbind(names_to = "rowid") %>%
           tidyr::pivot_wider(names_from = .data$varname, values_from = .data$value,
                              names_prefix = paste0(names_prefix, "_"),
-                             names_repair = "universal_quiet") -> result
+                             names_repair = "universal_quiet") %>%
+             dplyr::mutate(dplyr::across(2 : tidyselect::last_col(), ~ dplyr::na_if(., y = "")))  -> result
 
      if(! keep) data %>% dplyr::select(1) -> data
      data %>% tibble::rowid_to_column() %>%
