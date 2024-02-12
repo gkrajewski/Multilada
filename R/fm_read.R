@@ -22,7 +22,7 @@ fm_read <- function(data_file, variables_file, translations_file = NULL, lang) {
 
      keys <- utils::read.csv(variables_file)
      keys <- keys[keys$Label != "", ]
-     keys <- keys[keys$If.needed != "", ]
+     keys <- keys[keys$Import != "", ]
 
      data <- data.table::setnames(data, keys[, lang], keys$Label, skip_absent = TRUE)
      data <- data %>% dplyr::select(tidyselect::any_of(keys$Label))
@@ -39,15 +39,15 @@ fm_read <- function(data_file, variables_file, translations_file = NULL, lang) {
      }
 
      #Type conversion
-     for(type in keys$Type.import) {
+     for(type in keys$Type) {
           if(type == "") next
           if(substr(type, 1, 1) == "%") {
-               data[keys[keys$Type.import == type, "Label"]] <- lapply(
-                    data[keys[keys$Type.import == type, "Label"]], function(x) as.POSIXct(x, format=type)
+               data[keys[keys$Type == type, "Label"]] <- lapply(
+                    data[keys[keys$Type == type, "Label"]], function(x) as.POSIXct(x, format=type)
                )
           } else {
-               data[keys[keys$Type.import == type, "Label"]] <- lapply(
-                    data[keys[keys$Type.import == type, "Label"]], paste0("as.", type)
+               data[keys[keys$Type == type, "Label"]] <- lapply(
+                    data[keys[keys$Type == type, "Label"]], paste0("as.", type)
                )
           }
      }
