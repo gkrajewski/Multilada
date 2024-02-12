@@ -2,30 +2,77 @@
 % Please edit documentation in R/fm_read.R
 \name{fm_read}
 \alias{fm_read}
-\title{Read and preprocess \emph{WP Form Maker} data}
+\title{Read and preprocess WP \emph{Form Maker} data}
 \usage{
 fm_read(data_file, variables_file, translations_file = NULL, lang)
 }
 \arguments{
-\item{data_file}{description}
+\item{data_file}{A \code{character}, the name of the file which the data are to be read from.
+It should be a \code{csv} file downloaded using the "Export to CSV" option
+of the WP \emph{Form Maker} plugin.}
 
-\item{variables_file}{description}
+\item{variables_file}{A \code{character}, the name of the "dictionary" file. It should be
+a \code{csv} file containing at least columns named "Label", "Import", "Type",
+and \code{lang} (the latter contains column names of \code{data_file} for a given language).
+Anything else is quietly ignored (unless causes \code{\link[=read.csv]{read.csv()}} to throw an error).
+See ‘Details’.}
 
-\item{translations_file}{description}
+\item{translations_file}{A \code{character}, the name of the (optional) "translations" file.
+It should be a \code{csv} file containing at least a column named "Translation"
+and a column named \code{lang}, which contains original values (for a given language)
+to be translated. Anything else is quietly ignored
+(unless causes \code{\link[=read.csv]{read.csv()}} to throw an error).}
 
-\item{lang}{description}
+\item{lang}{A \code{character}, the name of language specific columns in \code{variables_file}
+and \code{translations_file}. It may be, e.g., a language ISO code ("no", "pl" etc.).}
 }
 \value{
-description
+A \code{dataframe} imported from \code{data_file} with column names, values, and
+types changed as described above.
 }
 \description{
 Reads a \code{csv} file downloaded using the "Export to CSV" option
-of the \emph{WP Form Maker} plugin.
+of the WordPress \emph{Form Maker} plugin.
 }
 \details{
-Additional details...
+Reading import settings from an external \code{csv} file (\code{variables_file})
+rather than setting them directly in \emph{R} might seem inconvenient at least but
+this way it is easy to share and modify the settings across projects, versions,
+and languages. \code{variables_file} should be treated as a "dictionary" file,
+with columns containing original \emph{Form Maker} form field names for
+each language version and a "Label" column with language independent target
+variable names.
+
+Only columns with labels provided in the "Label" column are imported.
+Additionally, there is the "Import" column to quickly switch on and off importing:
+variables for which this column is empty are not imported. Language specific
+field names in \code{variables_file} should look exactly like column names of
+a data frame returned by \code{read.csv(data_file)}, \strong{not} like they look \strong{in}
+\code{data_file} downloaded from the website.
+
+The "Type" column of \code{variables_file} may be used to convert the type
+of the imported column (probably \code{numeric} or \code{character}). It should contain
+the name of the required type ("type" so that \code{as.type()} exists) or,
+if the imported column contains strings to be converted to a date or
+date-time type, it should contain the expected format of the string,
+as used by \code{\link[=strptime]{strptime()}}, i.e., the value of \code{format} argument to
+\code{\link[=as.POSIXct]{as.POSIXct()}}.
+
+If \code{translations_file} is provided, all occurrences of values in its
+\code{lang} column in the imported data frame are changed to the corresponding
+values in its "Translation" column. So far this is not a column-wise
+operation (e.g., translating \emph{ja}'s to \emph{yes}'es across all the columns).
+
+\code{fm_read()} proceeds in this order: it imports data from \code{data_file} to
+a data frame, renames its columns using "Label" from \code{variables_file},
+translates all values in all its columns using \code{translations_file}
+(if provided), and only then converts the type of selected columns
+using "Type" from \code{variables_file}. So, for example, to convert
+all yes/no responses to logical values, \code{translations_file} may be used
+to convert each "tak"/"ja" to "TRUE" and each "nie"/"nei" to "FALSE" and
+"logical" may be added to the "Type" column in relevant rows of \code{variables_file}.
 }
 \examples{
-# example code
+# an example variables_file and translations_file might be helpful
 
 }
