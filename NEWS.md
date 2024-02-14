@@ -1,3 +1,7 @@
+# Multilada 0.4.0
+
+* Functions dealing with *Form Maker* data added.
+
 # Multilada 0.3.1
 
 * [Multiple submissions differentiated by `end_date`,
@@ -6,7 +10,7 @@ rather than `start_date`](https://github.com/gkrajewski/Multilada/issues/7)
 
 # Multilada 0.3.0
 
-* `cdi_adaptive()` to summarise adaptive CDIs. submissions
+* `cdi_adaptive()` to summarise adaptive CDIs submissions.
 
 # Multilada 0.2.0
 
