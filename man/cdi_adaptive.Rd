@@ -7,11 +7,11 @@
 cdi_adaptive(data)
 }
 \arguments{
-\item{data}{A \code{dataframe} containing answers to a \emph{CDI-Online} \strong{adaptive} form,
+\item{data}{A data frame containing answers to a \emph{CDI-Online} \strong{adaptive} form,
 as returned by \code{\link[=cdi_read]{cdi_read()}} (or obtained otherwise).}
 }
 \value{
-A \code{dataframe} summarising key information for each submission.
+A data frame summarising key information for each submission.
 }
 \description{
 Get various information about adaptive CDI submissions.

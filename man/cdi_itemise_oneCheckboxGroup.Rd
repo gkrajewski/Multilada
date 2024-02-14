@@ -7,15 +7,15 @@
 cdi_itemise_oneCheckboxGroup(data, items)
 }
 \arguments{
-\item{data}{A \code{dataframe} containing answers to a \emph{CDI-Online} \strong{static} form,
+\item{data}{A data frame containing answers to a \emph{CDI-Online} \strong{static} form,
 as returned by \code{\link[=cdi_read]{cdi_read()}} (or obtained otherwise).}
 
-\item{items}{A \code{dataframe} containing item definitions for a \emph{CDI-Online} form, e.g., as imported from
+\item{items}{A data frame containing item definitions for a \emph{CDI-Online} form, e.g., as imported from
 \code{items.csv} file found in the appropriate subfolder of \verb{www/languages/} in your \emph{CDI-Online} installation
 (required columns are \code{type}, \code{category}, and \code{definition}).}
 }
 \value{
-A \code{dataframe} with columns: "id", "type", "category", "item_id" (sequence number within category),
+A data frame with columns: "id", "type", "category", "item_id" (sequence number within category),
 "response" (0 or 1), and "definition", as well as any other columns contained in \code{items}.
 }
 \description{

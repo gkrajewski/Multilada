@@ -1,6 +1,6 @@
 Package: Multilada
 Title: MultiLADA's Little Helpers
-Version: 0.3.1
+Version: 0.4.0
 Authors@R: 
     person("Grzegorz", "Krajewski", , "krajewski@psych.uw.edu.pl", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-6222-9359"))
@@ -13,14 +13,17 @@ URL: https://github.com/gkrajewski/Multilada
 BugReports: https://github.com/gkrajewski/Multilada/issues
 Imports:
     askpass,
+    data.table,
     dplyr,
     keyring,
     lubridate,
     magrittr,
+    purrr,
     rappdirs,
     rlang,
     RMariaDB,
     stats,
     stringr,
+    tibble,
     tidyr,
     tidyselect

@@ -7,7 +7,7 @@
 #' * `checkboxAlt`: type used for checkbox alternatives (e.g., some *Complexity* sections);
 #' * `radio`: traditional radio button question type.
 #'
-#' @param data A `dataframe` containing answers to a *CDI-Online* **static** form,
+#' @param data A data frame containing answers to a *CDI-Online* **static** form,
 #'   as returned by [cdi_read()] (or obtained otherwise).
 #'
 #' @param type A `character`, the value of the `type` column of the `data` dataframe,
@@ -39,7 +39,7 @@
 #'   (as a matter of fact `type` can also be used just for that reason,
 #'   e.g., "gestures_first", "gestures_games" etc. without overarching "gestures").
 #'
-#' @returns A `dataframe` with columns: "id", "n" (resulting count), "type" (the argument to the function,
+#' @returns A data frame with columns: "id", "n" (resulting count), "type" (the argument to the function,
 #' not `answer_type`), "answer" (if applicable), and "category" (if not `NULL`).
 #'
 #' @examples

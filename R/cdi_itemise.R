@@ -8,11 +8,11 @@
 #'
 #' @inheritParams cdi_count_checkboxAlt
 #'
-#' @param items A `dataframe` containing item definitions for a *CDI-Online* form, e.g., as imported from
+#' @param items A data frame containing item definitions for a *CDI-Online* form, e.g., as imported from
 #'   `items.csv` file found in the appropriate subfolder of `www/languages/` in your *CDI-Online* installation
 #'   (required columns are `type`, `category`, and `definition`).
 #'
-#' @returns A `dataframe` with columns: "id", "type", "category", "item_id" (sequence number within category),
+#' @returns A data frame with columns: "id", "type", "category", "item_id" (sequence number within category),
 #' "response" (0 or 1), and "definition", as well as any other columns contained in `items`.
 #'
 #' @export
@@ -35,11 +35,11 @@ cdi_itemise_oneCheckboxGroup <- function(data, items) {
 #'
 #' @inheritParams cdi_count_checkboxAlt
 #'
-#' @param items A `dataframe` containing item definitions for a *CDI-Online* form, e.g., as imported from
+#' @param items A data frame containing item definitions for a *CDI-Online* form, e.g., as imported from
 #'   `items.csv` file found in the appropriate subfolder of `www/languages/` in your *CDI-Online* installation
 #'   (required columns are `type`, `category`, and `definition`).
 #'
-#' @returns A `dataframe` with columns: "id", "type", "category", "item_id" (sequence number within category),
+#' @returns A data frame with columns: "id", "type", "category", "item_id" (sequence number within category),
 #' "answer1" (0 or 1), "answer2" (0 or 1), and "definition", as well as any other columns contained in `items`.
 #'
 #' @export
@@ -63,11 +63,11 @@ cdi_itemise_checkboxAlt <- function(data, type, items) {
 #'
 #' @inheritParams cdi_count_checkboxAlt
 #'
-#' @param items A `dataframe` containing item definitions for a *CDI-Online* form, e.g., as imported from
+#' @param items A data frame containing item definitions for a *CDI-Online* form, e.g., as imported from
 #'   `items.csv` file found in the appropriate subfolder of `www/languages/` in your *CDI-Online* installation
 #'   (required columns are `type`, `category`, and `definition`).
 #'
-#' @returns A `dataframe` with columns: "id", "type", "category", "item_id" (sequence number within category),
+#' @returns A data frame with columns: "id", "type", "category", "item_id" (sequence number within category),
 #' "answer" (number coded), and "definition", as well as any other columns contained in `items`.
 #'
 #' @export
