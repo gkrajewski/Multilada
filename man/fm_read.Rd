@@ -27,7 +27,7 @@ to be translated. Anything else is quietly ignored
 and \code{translations_file}. It may be, e.g., a language ISO code ("no", "pl" etc.).}
 }
 \value{
-A \code{dataframe} imported from \code{data_file} with column names, values, and
+A data frame imported from \code{data_file} with column names, values, and
 types changed as described above.
 }
 \description{

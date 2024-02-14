@@ -2,14 +2,14 @@
 #'
 #' Get various information about adaptive CDI submissions.
 #'
-#' @param data A `dataframe` containing answers to a *CDI-Online* **adaptive** form,
+#' @param data A data frame containing answers to a *CDI-Online* **adaptive** form,
 #'   as returned by [cdi_read()] (or obtained otherwise).
 #'
 #' @details So far it summarises submissions only.
 #'   Extracting information on individual responses, items, etc. might be added later
 #'   (here or in separate functions).
 #'
-#' @returns A `dataframe` summarising key information for each submission.
+#' @returns A data frame summarising key information for each submission.
 #'
 #' @export
 cdi_adaptive <- function(data) {

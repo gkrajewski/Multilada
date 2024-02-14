@@ -56,7 +56,7 @@
 #'   to convert each "tak"/"ja" to "TRUE" and each "nie"/"nei" to "FALSE" and
 #'   "logical" may be added to the "Type" column in relevant rows of `variables_file`.
 #'
-#' @returns A `dataframe` imported from `data_file` with column names, values, and
+#' @returns A data frame imported from `data_file` with column names, values, and
 #'   types changed as described above.
 #'
 #' @examples

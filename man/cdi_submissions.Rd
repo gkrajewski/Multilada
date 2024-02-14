@@ -10,7 +10,7 @@ cdi_submissions(data, run = FALSE, form = FALSE, sort.by.end = FALSE)
 cdi_time(data, run = FALSE, form = FALSE, sort.by.end = FALSE)
 }
 \arguments{
-\item{data}{A \code{dataframe} containing answers to a \emph{CDI-Online} \strong{static} form,
+\item{data}{A data frame containing answers to a \emph{CDI-Online} \strong{static} form,
 as returned by \code{\link[=cdi_read]{cdi_read()}} (or obtained otherwise).}
 
 \item{run}{A logical value indicating whether to include column "run".}

@@ -26,7 +26,7 @@ For \code{cdi_forms()} a \code{character} vector of table names for \emph{CDI-On
 \emph{CDI-Online} app creates a name for a table by appending the value of parameter \code{lang}
 to the value of parameter \code{form} using "_" as a separator.
 
-For \code{cdi_read()} a \code{dataframe} with all responses for a given form. The format of the responses mirrors
+For \code{cdi_read()} a data frame with all responses for a given form. The format of the responses mirrors
 the way \emph{CDI-Online} app saves them to a table in a database.
 }
 \description{
