@@ -1,18 +1,45 @@
-#' Preprocess responses to *WP Form Maker* matrix-type questions
+#' Parse responses to *WP Form Maker* multiple item fields
 #'
-#' Matrix questions...
+#' `fm_matrix()` parses responses to (radio) "matrix" fields:
+#' same scale applied to a number of items.
+#' `fm_grading()` parses responses to (numeric) so-called "grading" fields:
+#' same type of response to a number of items.
+#' `csv` files downloaded with the "Export to CSV" option of the WP *Form Maker* plugin
+#' keep all such responses in a single column, making it impossible to analyse them.
 #'
-#' @param data blah
-#' @param names_prefix blah
-#' @param keep blah
+#' @param data A data frame with at least two columns.
+#'   The first column is expected to contain IDs and the second column
+#'   should be the column to be parsed. NB this a very "non-tidyverse" and
+#'   very base *R* approach but it keeps the parsed responses linked
+#'   to the appropriate IDs and allows limiting parsing to a subset of IDs
+#'   (if you're fluent in base *R*...).
+#' @param names_prefix An optional `character` providing a prefix to the names of
+#'   resulting columns. If `NULL` (the default) the names are constructed by prefixing
+#'   each item label with the name of the original column (with "_" as
+#'   a connector). Use this opion if you want to change this prefix
+#'   (perhaps to something simpler).
+#' @param keep `Logical`. Should the original column be kept in the returned
+#'   data frame. Defaults to `FALSE`. Setting to `TRUE` is helpful when you want
+#'   to check if the parsing works as expected. To merge the parsed responses back
+#'   to the original *Form Maker* data frame you should keep the default
+#'   (the original column is already there).
 #'
-#' @details
-#' Additional details...
+#' @details "Grading" fields should accept only numeric input but for some reason
+#' (a bug in *Form Maker*?) it hasn't always behaved like this and `fm_grading()`
+#' accepts `character` entries as well.
 #'
-#' @returns description
+#' @returns A data frame with the first (ID) column of `data`, the resulting
+#'   columns with responses to each item, and optionally with the second
+#'   (parsed) column of `data`.
 #'
 #' @examples
-#' # example code
+#' \dontrun{
+#' # To check the parsing first:
+#' fm_grading(df[, c("id", "first_contact_lang")], keep = TRUE) %>% view()
+#'
+#' # To add the parsed responses back to the original df:
+#' left_join(df, fm_grading(df[, c("id", "first_contact_lang")])) -> df
+#' }
 #'
 #' @export
 fm_matrix <- function(data, names_prefix = NULL, keep = FALSE) {
