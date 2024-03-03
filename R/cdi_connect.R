@@ -25,7 +25,8 @@
 #'   *CDI-Online* app creates a name for a table by appending the value of parameter `lang`
 #'   to the value of parameter `form` using "_" as a separator.
 #'
-#'   For `cdi_read()` a data frame with all responses for a given form. The format of the responses mirrors
+#'   For `cdi_read()` a tibble with all responses for a given form. All character columns
+#'   are coerced to factors. The format of the responses mirrors
 #'   the way *CDI-Online* app saves them to a table in a database.
 #'
 #' @examples
@@ -61,5 +62,5 @@ cdi_read <- function(database = NULL, form) {
      cdi <- RMariaDB::dbGetQuery(connection, statement) %>%
              dplyr::mutate(dplyr::across(tidyselect::where(is.character), as.factor))
      RMariaDB::dbDisconnect(connection)
-     return(cdi)
+     return(tibble::as_tibble(cdi))
 }
