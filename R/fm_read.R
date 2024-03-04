@@ -64,18 +64,18 @@
 #'
 #' @export
 fm_read <- function(data_file, variables_file, translations_file = NULL, lang) {
-     data <- utils::read.csv(data_file)
+     data <- readr::read_csv(data_file, col_types = cols(.default = "c"))
 
-     keys <- utils::read.csv(variables_file)
+     keys <- readr::read_csv(variables_file, na = "NA")
      keys <- keys[keys$Label != "", ]
      keys <- keys[keys$Import != "", ]
 
-     data <- data.table::setnames(data, keys[, lang], keys$Label, skip_absent = TRUE)
+     data <- data.table::setnames(data, keys[[lang]], keys$Label, skip_absent = TRUE)
      data <- data %>% dplyr::select(tidyselect::any_of(keys$Label))
 
      if(! is.null(translations_file)) {
-          trans <- utils::read.csv(translations_file)
-          trans$x <- trans[, lang]
+          trans <- readr::read_csv(translations_file, na = "NA")
+          trans$x <- trans[[lang]]
           trans <- trans[, c("Translation", "x")]
 
           trans <- trans[trans$x != "", ]
@@ -88,12 +88,12 @@ fm_read <- function(data_file, variables_file, translations_file = NULL, lang) {
      for(type in keys$Type) {
           if(type == "") next
           if(substr(type, 1, 1) == "%") {
-               data[keys[keys$Type == type, "Label"]] <- lapply(
-                    data[keys[keys$Type == type, "Label"]], function(x) as.POSIXct(x, format=type)
+               data[dplyr::pull(keys[keys$Type == type, "Label"])] <- lapply(
+                    data[dplyr::pull(keys[keys$Type == type, "Label"])], function(x) as.POSIXct(x, format=type)
                )
           } else {
-               data[keys[keys$Type == type, "Label"]] <- lapply(
-                    data[keys[keys$Type == type, "Label"]], paste0("as.", type)
+               data[dplyr::pull(keys[keys$Type == type, "Label"])] <- lapply(
+                    data[dplyr::pull(keys[keys$Type == type, "Label"])], paste0("as.", type)
                )
           }
      }
