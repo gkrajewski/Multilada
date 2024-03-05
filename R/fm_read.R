@@ -64,9 +64,11 @@
 #'
 #' @export
 fm_read <- function(data_file, variables_file, translations_file = NULL, lang) {
-     data <- readr::read_csv(data_file, col_types = cols(.default = "c"))
+     data <- readr::read_csv(data_file, col_types = readr::cols(.default = "c"),
+                             name_repair = "unique_quiet", show_col_types = FALSE)
 
-     keys <- readr::read_csv(variables_file, na = "NA")
+     keys <- readr::read_csv(variables_file, na = "NA",
+                             name_repair = "unique_quiet", show_col_types = FALSE)
      keys <- keys[keys$Label != "", ]
      keys <- keys[keys$Import != "", ]
 
@@ -74,7 +76,8 @@ fm_read <- function(data_file, variables_file, translations_file = NULL, lang) {
      data <- data %>% dplyr::select(tidyselect::any_of(keys$Label))
 
      if(! is.null(translations_file)) {
-          trans <- readr::read_csv(translations_file, na = "NA")
+          trans <- readr::read_csv(translations_file, na = "NA",
+                                   name_repair = "unique_quiet", show_col_types = FALSE)
           trans$x <- trans[[lang]]
           trans <- trans[, c("Translation", "x")]
 
