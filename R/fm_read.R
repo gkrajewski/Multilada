@@ -9,13 +9,11 @@
 #' @param variables_file A `character`, the name of the "dictionary" file. It should be
 #'   a `csv` file containing at least columns named "Label", "Import", "Type",
 #'   and `lang` (the latter contains column names of `data_file` for a given language).
-#'   Anything else is quietly ignored (unless causes [read.csv()] to throw an error).
 #'   See ‘Details’.
 #' @param translations_file A `character`, the name of the (optional) "translations" file.
 #'   It should be a `csv` file containing at least a column named "Translation"
 #'   and a column named `lang`, which contains original values (for a given language)
-#'   to be translated. Anything else is quietly ignored
-#'   (unless causes [read.csv()] to throw an error).
+#'   to be translated. See ‘Details’.
 #' @param lang A `character`, the name of language specific columns in `variables_file`
 #'   and `translations_file`. It may be, e.g., a language ISO code ("no", "pl" etc.).
 #'
@@ -24,20 +22,24 @@
 #'   this way it is easy to share and modify the settings across projects, versions,
 #'   and languages. `variables_file` should be treated as a "dictionary" file,
 #'   with columns containing original *Form Maker* form field names for
-#'   each language version and a "Label" column with language independent target
-#'   variable names.
+#'   each language version (usually actual questions) and a "Label" column
+#'   with language independent target variable names.
 #'
 #'   Only columns with labels provided in the "Label" column are imported.
 #'   Additionally, there is the "Import" column to quickly switch on and off importing:
 #'   variables for which this column is empty are not imported. Language specific
 #'   field names in `variables_file` should look exactly like column names of
-#'   a data frame returned by `read.csv(data_file)`, **not** like they look **in**
-#'   `data_file` downloaded from the website.
+#'   `data_file` downloaded from the website (usually actual questions).
+#'   The only exception is duplicated names (questions), which should have
+#'   "...j" appended, where `j` is the column position (consistent with
+#'   [readr::read_csv()]'s default `name_repair = "unique"`; see also
+#'   low level [vctrs::vec_as_names()]).
 #'
+#'   **Everything** is imported as `character`, which is conservative and safe.
 #'   The "Type" column of `variables_file` may be used to convert the type
-#'   of the imported column (probably `numeric` or `character`). It should contain
-#'   the name of the required type ("type" so that `as.type()` exists) or,
-#'   if the imported column contains strings to be converted to a date or
+#'   of an imported column to something else. It should contain
+#'   the name of the required type ("type", so that `as.type()` exists) or,
+#'   if the imported column contains strings to be converted to the date or
 #'   date-time type, it should contain the expected format of the string,
 #'   as used by [strptime()], i.e., the value of `format` argument to
 #'   [as.POSIXct()].
@@ -56,7 +58,15 @@
 #'   to convert each "tak"/"ja" to "TRUE" and each "nie"/"nei" to "FALSE" and
 #'   "logical" may be added to the "Type" column in relevant rows of `variables_file`.
 #'
-#' @returns A data frame imported from `data_file` with column names, values, and
+#'   All file reading is done via [readr::read_csv()] with parsing messages
+#'   suppressed but the parsing issues warning on. If you see it, it is not
+#'   very useful, as you don't know which file import is concerned and
+#'   you can't run [readr::problems()] as advised by the warning message.
+#'   Other than that, when reading `variables_file` and `translations_file`
+#'   anything other than expected columns is quietly ignored (so you can keep
+#'   columns with some extra information, notes etc. in these files).
+#'
+#' @returns A tibble imported from `data_file` with column names, values, and
 #'   types changed as described above.
 #'
 #' @examples
