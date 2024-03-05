@@ -27,13 +27,15 @@
 #'
 #'   Only columns with labels provided in the "Label" column are imported.
 #'   Additionally, there is the "Import" column to quickly switch on and off importing:
-#'   variables for which this column is empty are not imported. Language specific
-#'   field names in `variables_file` should look exactly like column names of
-#'   `data_file` downloaded from the website (usually actual questions).
+#'   variables for which this column is empty are not imported.
+#'
+#'   Language specific field names in `variables_file` should look exactly
+#'   like column names of `data_file` downloaded from the website (usually actual questions).
 #'   The only exception is duplicated names (questions), which should have
 #'   "...j" appended, where `j` is the column position (consistent with
 #'   [readr::read_csv()]'s default `name_repair = "unique"`; see also
-#'   low level [vctrs::vec_as_names()]).
+#'   low level [vctrs::vec_as_names()] for details and [fm_fields()],
+#'   a helper function to prepare such a column of field names).
 #'
 #'   **Everything** is imported as `character`, which is conservative and safe.
 #'   The "Type" column of `variables_file` may be used to convert the type
@@ -68,6 +70,9 @@
 #'
 #' @returns A tibble imported from `data_file` with column names, values, and
 #'   types changed as described above.
+#'
+#' @seealso [fm_fields()] for preparing a relevant, language specific,
+#'   column with *Form Maker* field names for `variables_file`.
 #'
 #' @examples
 #' # an example variables_file and translations_file might be helpful
@@ -111,4 +116,35 @@ fm_read <- function(data_file, variables_file, translations_file = NULL, lang) {
           }
      }
      return(data)
+}
+
+
+#' Prepare WP *Form Maker* field names
+#'
+#' Reads column names of a `csv` file downloaded using the "Export to CSV" option
+#' of the WordPress *Form Maker* plugin. "Repairs" duplicated names, as
+#' required by [fm_read()], and returns a single column tibble, which
+#' can be used to create a column with field names in a given language
+#' in `variables_file` required by [fm_read()].
+#'
+#' @param source_file A `character`, the name of a `csv` file downloaded
+#'   using the "Export to CSV" option of the WP *Form Maker* plugin
+#' @param lang A `character`, the name of resulting column, e.g.,
+#'   a language ISO code ("no", "pl" etc.).
+#'
+#' @details It basically applies [vctrs::vec_as_names()] with `repair = "unique"`,
+#'   adding "...j" to each duplicated column, where `j` is the column position
+#'   (consistent with [readr::read_csv()]'s default behaviour used in [fm_read()].
+#'
+#' @returns A single column tibble with `lang` as the name of the column.
+#'
+#' @seealso [fm_read()]
+#'
+#' @export
+fm_fields <- function(source_file, lang) {
+        readr::read_csv(source_file, n_max = 1, col_names = FALSE,
+                        show_col_types = FALSE) %>%
+        dplyr::slice_head(n = 1) %>% as.character() %>%
+        vctrs::vec_as_names(repair = "unique") %>% as.vector() -> field_names
+        tibble::enframe(field_names, name = NULL, value = lang)
 }

@@ -43,13 +43,15 @@ with language independent target variable names.
 
 Only columns with labels provided in the "Label" column are imported.
 Additionally, there is the "Import" column to quickly switch on and off importing:
-variables for which this column is empty are not imported. Language specific
-field names in \code{variables_file} should look exactly like column names of
-\code{data_file} downloaded from the website (usually actual questions).
+variables for which this column is empty are not imported.
+
+Language specific field names in \code{variables_file} should look exactly
+like column names of \code{data_file} downloaded from the website (usually actual questions).
 The only exception is duplicated names (questions), which should have
 "...j" appended, where \code{j} is the column position (consistent with
 \code{\link[readr:read_delim]{readr::read_csv()}}'s default \code{name_repair = "unique"}; see also
-low level \code{\link[vctrs:vec_as_names]{vctrs::vec_as_names()}}).
+low level \code{\link[vctrs:vec_as_names]{vctrs::vec_as_names()}} for details and \code{\link[=fm_fields]{fm_fields()}},
+a helper function to prepare such a column of field names).
 
 \strong{Everything} is imported as \code{character}, which is conservative and safe.
 The "Type" column of \code{variables_file} may be used to convert the type
@@ -85,4 +87,8 @@ columns with some extra information, notes etc. in these files).
 \examples{
 # an example variables_file and translations_file might be helpful
 
+}
+\seealso{
+\code{\link[=fm_fields]{fm_fields()}} for preparing a relevant, language specific,
+column with \emph{Form Maker} field names for \code{variables_file}.
 }
