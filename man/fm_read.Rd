@@ -53,7 +53,8 @@ The only exception is duplicated names (questions), which should have
 low level \code{\link[vctrs:vec_as_names]{vctrs::vec_as_names()}} for details and \code{\link[=fm_fields]{fm_fields()}},
 a helper function to prepare such a column of field names).
 
-\strong{Everything} is imported as \code{character}, which is conservative and safe.
+\strong{Everything} is imported as \code{character}, which is conservative and safe
+(also all empty fields are imported as \code{NA}s).
 The "Type" column of \code{variables_file} may be used to convert the type
 of an imported column to something else. It should contain
 the name of the required type ("type", so that \code{as.type()} exists) or,

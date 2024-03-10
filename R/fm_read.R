@@ -37,7 +37,8 @@
 #'   low level [vctrs::vec_as_names()] for details and [fm_fields()],
 #'   a helper function to prepare such a column of field names).
 #'
-#'   **Everything** is imported as `character`, which is conservative and safe.
+#'   **Everything** is imported as `character`, which is conservative and safe
+#'   (also all empty fields are imported as `NA`s).
 #'   The "Type" column of `variables_file` may be used to convert the type
 #'   of an imported column to something else. It should contain
 #'   the name of the required type ("type", so that `as.type()` exists) or,
