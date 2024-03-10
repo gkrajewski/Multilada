@@ -72,11 +72,12 @@ fm_matrix <- function(data, names_prefix = NULL, keep = FALSE) {
 #' @export
 fm_grading <- function(data, names_prefix = NULL, keep = FALSE) {
      if(is.null(names_prefix)) colnames(data)[2] -> names_prefix
-     pattern <- stringr::regex("(?<varname>[^:, ]+?)
+     pattern <- stringr::regex("(?<varname>[^:, ]*?)
                                :\\s
                                (?<value>[^:, ]*?)
                                ,\\s", comments = TRUE)
 
+     data[[2]] <- tidyr::replace_na(data[[2]], "")
      stringr::str_match_all(data[[2]], pattern) %>% purrr::map(function(x) {
           as.data.frame(x) %>%
                dplyr::select(- .data$V1)
