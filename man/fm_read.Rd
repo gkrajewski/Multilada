@@ -17,9 +17,9 @@ and \code{lang} (the latter contains column names of \code{data_file} for a give
 See ‘Details’.}
 
 \item{translations_file}{A \code{character}, the name of the (optional) "translations" file.
-It should be a \code{csv} file containing at least a column named "Translation"
-and a column named \code{lang}, which contains original values (for a given language)
-to be translated. See ‘Details’.}
+It should be a \code{csv} file containing at least columns named "Translation" and
+"Label" and a column named \code{lang}, which contains original values
+(for a given language) to be translated. See ‘Details’.}
 
 \item{lang}{A \code{character}, the name of language specific columns in \code{variables_file}
 and \code{translations_file}. It may be, e.g., a language ISO code ("no", "pl" etc.).}
@@ -64,10 +64,13 @@ date-time type, it should contain the expected format of the string,
 as used by \code{\link[=strptime]{strptime()}}, i.e., the value of \code{format} argument to
 \code{\link[=as.POSIXct]{as.POSIXct()}}.
 
-If \code{translations_file} is provided, all occurrences of values in its
+If \code{translations_file} is provided, occurrences of values in its
 \code{lang} column in the imported data frame are changed to the corresponding
-values in its "Translation" column. So far this is not a column-wise
-operation (e.g., translating \emph{ja}'s to \emph{yes}'es across all the columns).
+values in its "Translation" column. If "Label" column is empty
+for a given row, this is done across the whole data frame
+(e.g., translating \emph{ja}'s to \emph{yes}'es across all the columns).
+Otherwise the translation is scoped to the column (variable)
+named in "Label" (using a label from \code{variables_file}).
 
 \code{fm_read()} proceeds in this order: it imports data from \code{data_file} to
 a data frame, renames its columns using "Label" from \code{variables_file},

@@ -11,9 +11,9 @@
 #'   and `lang` (the latter contains column names of `data_file` for a given language).
 #'   See ‘Details’.
 #' @param translations_file A `character`, the name of the (optional) "translations" file.
-#'   It should be a `csv` file containing at least a column named "Translation"
-#'   and a column named `lang`, which contains original values (for a given language)
-#'   to be translated. See ‘Details’.
+#'   It should be a `csv` file containing at least columns named "Translation" and
+#'   "Label" and a column named `lang`, which contains original values
+#'   (for a given language) to be translated. See ‘Details’.
 #' @param lang A `character`, the name of language specific columns in `variables_file`
 #'   and `translations_file`. It may be, e.g., a language ISO code ("no", "pl" etc.).
 #'
@@ -48,10 +48,13 @@
 #'   as used by [strptime()], i.e., the value of `format` argument to
 #'   [as.POSIXct()].
 #'
-#'   If `translations_file` is provided, all occurrences of values in its
+#'   If `translations_file` is provided, occurrences of values in its
 #'   `lang` column in the imported data frame are changed to the corresponding
-#'   values in its "Translation" column. So far this is not a column-wise
-#'   operation (e.g., translating *ja*'s to *yes*'es across all the columns).
+#'   values in its "Translation" column. If "Label" column is empty
+#'   for a given row, this is done across the whole data frame
+#'   (e.g., translating *ja*'s to *yes*'es across all the columns).
+#'   Otherwise the translation is scoped to the column (variable)
+#'   named in "Label" (using a label from `variables_file`).
 #'
 #'   `fm_read()` proceeds in this order: it imports data from `data_file` to
 #'   a data frame, renames its columns using "Label" from `variables_file`,
@@ -93,15 +96,19 @@ fm_read <- function(data_file, variables_file, translations_file = NULL, lang) {
      data <- data.table::setnames(data, keys[[lang]], keys$Label, skip_absent = TRUE)
      data <- data %>% dplyr::select(tidyselect::any_of(keys$Label))
 
+     #Translations
      if(! is.null(translations_file)) {
           trans <- readr::read_csv(translations_file, na = "NA",
                                    name_repair = "unique_quiet", show_col_types = FALSE)
           trans$x <- trans[[lang]]
-          trans <- trans[, c("Translation", "x")]
-
+          trans <- trans[, c("Translation", "x", "Label")]
           trans <- trans[trans$x != "", ]
+
           for (i in 1:nrow(trans)){
-               data[data == trans$x[i]] <- trans$Translation[i]
+                  if(trans$Label[i] == "") data[data == trans$x[i]] <- trans$Translation[i]
+                  else dplyr::if_else(data[[trans$Label[i]]] == trans$x[i],
+                                      trans$Translation[i],
+                                      data[[trans$Label[i]]]) -> data[[trans$Label[i]]]
           }
      }
 
