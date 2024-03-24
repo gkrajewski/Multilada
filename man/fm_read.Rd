@@ -50,8 +50,9 @@ like column names of \code{data_file} downloaded from the website (usually actua
 The only exception is duplicated names (questions), which should have
 "...j" appended, where \code{j} is the column position (consistent with
 \code{\link[readr:read_delim]{readr::read_csv()}}'s default \code{name_repair = "unique"}; see also
-low level \code{\link[vctrs:vec_as_names]{vctrs::vec_as_names()}} for details and \code{\link[=fm_fields]{fm_fields()}},
-a helper function to prepare such a column of field names).
+low level \code{\link[vctrs:vec_as_names]{vctrs::vec_as_names()}} for details and \code{\link[=fm_variables]{fm_variables()}},
+a helper function to prepare such a column of field names or indeed
+a whole empty \code{variables_file}).
 
 \strong{Everything} is imported as \code{character}, which is conservative and safe
 (also all empty fields are imported as \code{NA}s).
@@ -90,6 +91,7 @@ columns with some extra information, notes etc. in these files).
 
 }
 \seealso{
-\code{\link[=fm_fields]{fm_fields()}} for preparing a relevant, language specific,
-column with \emph{Form Maker} field names for \code{variables_file}.
+\code{\link[=fm_variables]{fm_variables()}} for preparing a new \code{variables_file} or
+just a single, language specific, column with \emph{Form Maker} field names,
+which may be added to \code{variables_file}.
 }
