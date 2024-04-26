@@ -92,7 +92,7 @@
 #' @examples
 #' # an example variables_file and translations_file might be helpful
 #'
-#' @
+#' @export
 fm_read <- function(data_file, variables_file, translations_file = NULL, lang, csv2_data = FALSE, csv2_var = FALSE, csv2_trans = FALSE) {
      #Data and variables
      if(csv2_data) {
@@ -193,7 +193,7 @@ fm_read <- function(data_file, variables_file, translations_file = NULL, lang, c
 #'   (only column `lang` with field names).
 #' @param target_file A `character`, an optional name of file to which
 #'   the resulting tibble will be saved.
-#' @csv2 A logical value. If set to `FALSE` (default), the source file is read
+#' @param csv2 A logical value. If set to `FALSE` (default), the source file is read
 #'   using `readr::read_csv()`. If set to `TRUE`, `readr::read_csv2()` is used.
 #'
 #' @details For field names (column names of the *FM* responses file)
