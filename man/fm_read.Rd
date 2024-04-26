@@ -105,9 +105,9 @@ All file reading is done via \code{\link[readr:read_delim]{readr::read_csv()}} o
 with parsing messages suppressed but the parsing issues warning on.
 If you see it, it is not very useful, as you don't know which file import
 is concerned and you can't run \code{\link[readr:problems]{readr::problems()}} as advised by the
-warning message. Other than that, when reading \code{variables_file} and \code{translations_file}
-anything other than expected columns is quietly ignored (so you can keep
-columns with some extra information, notes etc. in these files).
+warning message. Other than that, when reading \code{variables_file} and
+\code{translations_file} anything other than expected columns is quietly ignored
+(so you can keep columns with some extra information, notes etc. in these files).
 }
 \examples{
 # an example variables_file and translations_file might be helpful
