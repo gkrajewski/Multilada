@@ -212,14 +212,14 @@ fm_read <- function(data_file, variables_file, translations_file = NULL, lang, c
 fm_variables <- function(source_file, lang, simplified = FALSE, target_file = NULL, csv2 = FALSE) {
         if(csv2) {
              var_df <- readr::read_csv2(source_file,
-                                      n_max = 1,
-                                      col_names = FALSE,
-                                      show_col_types = FALSE)
+                                        n_max = 1,
+                                        col_names = FALSE,
+                                        show_col_types = FALSE)
         } else {
              var_df <- readr::read_csv(source_file,
-                                     n_max = 1,
-                                     col_names = FALSE,
-                                     show_col_types = FALSE)
+                                       n_max = 1,
+                                       col_names = FALSE,
+                                       show_col_types = FALSE)
         }
         var_df %>% dplyr::slice_head(n = 1) %>% as.character() %>%
                 vctrs::vec_as_names(repair = "unique") %>% as.vector() -> var_df
