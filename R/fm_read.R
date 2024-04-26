@@ -16,6 +16,15 @@
 #'   (for a given language) to be translated. See ‘Details’.
 #' @param lang A `character`, the name of language specific columns in `variables_file`
 #'   and `translations_file`. It may be, e.g., a language ISO code ("no", "pl" etc.).
+#' @param csv2_data A logical value. If set to `FALSE` (default), the
+#'   `data_file` is read using [readr::read_csv()].
+#'   If set to `TRUE`, the `data_file` is read using [readr::read_csv2()].
+#' @param csv2_var A logical value. If set to `FALSE` (default), the
+#'  `variables_file` is read using [readr::read_csv()].
+#'  If set to `TRUE`, the `variables_file` is read using [readr::read_csv2()].
+#' @param csv2_trans A logical value. If set to `FALSE` (default), the
+#'  `translations_file` is read using [readr::read_csv()].
+#'  If set to `TRUE`, the `translations_file` is read using [readr::read_csv2()].
 #'
 #' @details Reading import settings from an external `csv` file (`variables_file`)
 #'   rather than setting them directly in *R* might seem inconvenient at least but
@@ -65,11 +74,11 @@
 #'   to convert each "tak"/"ja" to "TRUE" and each "nie"/"nei" to "FALSE" and
 #'   "logical" may be added to the "Type" column in relevant rows of `variables_file`.
 #'
-#'   All file reading is done via [readr::read_csv()] with parsing messages
-#'   suppressed but the parsing issues warning on. If you see it, it is not
-#'   very useful, as you don't know which file import is concerned and
-#'   you can't run [readr::problems()] as advised by the warning message.
-#'   Other than that, when reading `variables_file` and `translations_file`
+#'   All file reading is done via [readr::read_csv()] or [readr::read_csv2()]
+#'   with parsing messages suppressed but the parsing issues warning on.
+#'   If you see it, it is not very useful, as you don't know which file import
+#'   is concerned and you can't run [readr::problems()] as advised by the
+#'   warning message. Other than that, when reading `variables_file` and `translations_file`
 #'   anything other than expected columns is quietly ignored (so you can keep
 #'   columns with some extra information, notes etc. in these files).
 #'
@@ -83,13 +92,36 @@
 #' @examples
 #' # an example variables_file and translations_file might be helpful
 #'
-#' @export
-fm_read <- function(data_file, variables_file, translations_file = NULL, lang) {
-     data <- readr::read_csv(data_file, col_types = readr::cols(.default = "c"),
-                             name_repair = "unique_quiet", show_col_types = FALSE)
+#' @
+fm_read <- function(data_file, variables_file, translations_file = NULL, lang, csv2_data = FALSE, csv2_var = FALSE, csv2_trans = FALSE) {
+     #Data and variables
+     if(csv2_data) {
+          data <- readr::read_csv2(data_file,
+                                   col_types = readr::cols(.default = "c"),
+                                   name_repair = "unique_quiet",
+                                   show_col_types = FALSE)
+     } else {
+          data <- readr::read_csv(data_file,
+                                  col_types = readr::cols(.default = "c"),
+                                  name_repair = "unique_quiet",
+                                  show_col_types = FALSE)
+     }
 
-     keys <- readr::read_csv(variables_file, na = "NA",
-                             name_repair = "unique_quiet", show_col_types = FALSE)
+     if(csv2_var) {
+          keys <- readr::read_csv2(variables_file,
+                                   na = c("","NA"),
+                                   col_types = readr::cols(.default = "c"),
+                                   name_repair = "unique_quiet",
+                                   show_col_types = FALSE)
+
+          keys[is.na(keys)] <- c("")
+     } else {
+          keys <- readr::read_csv(variables_file,
+                                  na = "NA",
+                                  col_types = readr::cols(.default = "c"),
+                                  name_repair = "unique_quiet",
+                                  show_col_types = FALSE)
+     }
      keys <- keys[keys$Label != "", ]
      keys <- keys[keys$Import != "", ]
 
@@ -98,17 +130,30 @@ fm_read <- function(data_file, variables_file, translations_file = NULL, lang) {
 
      #Translations
      if(! is.null(translations_file)) {
-          trans <- readr::read_csv(translations_file, na = "NA",
-                                   name_repair = "unique_quiet", show_col_types = FALSE)
+          if (csv2_trans) {
+               trans <- readr::read_csv2(translations_file,
+                                         na = c("","NA"),
+                                         col_types = readr::cols(.default = "c"),
+                                         name_repair = "unique_quiet",
+                                         show_col_types = FALSE)
+               trans[is.na(trans)] <- c("")
+          } else {
+               trans <- readr::read_csv(translations_file,
+                                        na = "NA",
+                                        col_types = readr::cols(.default = "c"),
+                                        name_repair = "unique_quiet",
+                                        show_col_types = FALSE)
+          }
+
           trans$x <- trans[[lang]]
           trans <- trans[, c("Translation", "x", "Label")]
           trans <- trans[trans$x != "", ]
 
           for (i in 1:nrow(trans)){
-                  if(trans$Label[i] == "") data[data == trans$x[i]] <- trans$Translation[i]
-                  else dplyr::if_else(data[[trans$Label[i]]] == trans$x[i],
-                                      trans$Translation[i],
-                                      data[[trans$Label[i]]]) -> data[[trans$Label[i]]]
+               if(trans$Label[i] == "") data[data == trans$x[i]] <- trans$Translation[i]
+               else dplyr::if_else(data[[trans$Label[i]]] == trans$x[i],
+                                   trans$Translation[i],
+                                   data[[trans$Label[i]]]) -> data[[trans$Label[i]]]
           }
      }
 
@@ -141,18 +186,22 @@ fm_read <- function(data_file, variables_file, translations_file = NULL, lang) {
 #'   using the "Export to CSV" option of the WP *Form Maker* plugin.
 #' @param lang A `character`, the name of the column with field names, e.g.,
 #'   a language ISO code ("no", "pl" etc.).
-#' @param simplified A logical value. If set to `TRUE` (default), the resulting tibble
+#' @param simplified A logical value. If set to `FALSE` (default), the resulting tibble
 #'   contains all the columns required by [fm_read()]
 #'   ("Import", "Label", and "Type" filled with `NA`s).
-#'   If set to `FALSE` returns a single column tibble
+#'   If set to `TRUE`, a single column tibble is returned
 #'   (only column `lang` with field names).
 #' @param target_file A `character`, an optional name of file to which
 #'   the resulting tibble will be saved.
+#' @csv2 A logical value. If set to `FALSE` (default), the source file is read
+#'   using `readr::read_csv()`. If set to `TRUE`, `readr::read_csv2()` is used.
 #'
 #' @details For field names (column names of the *FM* responses file)
 #'   it basically applies [vctrs::vec_as_names()] with `repair = "unique"`,
 #'   adding "...j" to each duplicated column, where `j` is the column position
 #'   (consistent with [readr::read_csv()]'s default behaviour used in [fm_read()].
+#'   The option `csv2 = TRUE` adds the support for reading a `source_file` with
+#'   a non-comma separator (e.g., a semicolon).
 #'
 #' @returns A tibble with `lang` and optionally "Import", "Label", and "Type" columns.
 #'   If `target_file` is specified, returns invisibly.
@@ -160,18 +209,26 @@ fm_read <- function(data_file, variables_file, translations_file = NULL, lang) {
 #' @seealso [fm_read()]
 #'
 #' @export
-fm_variables <- function(source_file, lang, simplified = FALSE, target_file = NULL) {
-        readr::read_csv(source_file, n_max = 1, col_names = FALSE,
-                        show_col_types = FALSE) %>%
-        dplyr::slice_head(n = 1) %>% as.character() %>%
-        vctrs::vec_as_names(repair = "unique") %>% as.vector() -> var_df
-        tibble::tibble(lang = var_df) -> var_df
-        if(! simplified) tibble::add_column(var_df,
-                                            Import = NA, Label = NA, Type = NA, .before = 1) ->
-                var_df
-        if(is.null(target_file)) return(var_df)
-        else {
-                readr::write_csv(var_df, target_file, na = "")
-                invisible(var_df)
+fm_variables <- function(source_file, lang, simplified = FALSE, target_file = NULL, csv2 = FALSE) {
+        if(csv2) {
+             var_df <- readr::read_csv2(source_file,
+                                      n_max = 1,
+                                      col_names = FALSE,
+                                      show_col_types = FALSE)
+        } else {
+             var_df <- readr::read_csv(source_file,
+                                     n_max = 1,
+                                     col_names = FALSE,
+                                     show_col_types = FALSE)
+        }
+        var_df %>% dplyr::slice_head(n = 1) %>% as.character() %>%
+                vctrs::vec_as_names(repair = "unique") %>% as.vector() -> var_df
+        tibble::tibble({{lang}} := var_df) -> var_df
+        if(! simplified) tibble::add_column(var_df, Import = NA, Label = NA, Type = NA, .before = 1) -> var_df
+        if (is.null(target_file)) {
+             return(var_df)
+        } else {
+             readr::write_csv(var_df, target_file, na = "")
+             invisible(var_df)
         }
 }
