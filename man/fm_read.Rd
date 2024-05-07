@@ -4,7 +4,15 @@
 \alias{fm_read}
 \title{Read and preprocess WP \emph{Form Maker} data}
 \usage{
-fm_read(data_file, variables_file, translations_file = NULL, lang)
+fm_read(
+  data_file,
+  variables_file,
+  translations_file = NULL,
+  lang,
+  csv2_data = FALSE,
+  csv2_var = FALSE,
+  csv2_trans = FALSE
+)
 }
 \arguments{
 \item{data_file}{A \code{character}, the name of the file which the data are to be read from.
@@ -23,6 +31,18 @@ It should be a \code{csv} file containing at least columns named "Translation" a
 
 \item{lang}{A \code{character}, the name of language specific columns in \code{variables_file}
 and \code{translations_file}. It may be, e.g., a language ISO code ("no", "pl" etc.).}
+
+\item{csv2_data}{A logical value. If set to \code{FALSE} (default), the
+\code{data_file} is read using \code{\link[readr:read_delim]{readr::read_csv()}}.
+If set to \code{TRUE}, the \code{data_file} is read using \code{\link[readr:read_delim]{readr::read_csv2()}}.}
+
+\item{csv2_var}{A logical value. If set to \code{FALSE} (default), the
+\code{variables_file} is read using \code{\link[readr:read_delim]{readr::read_csv()}}.
+If set to \code{TRUE}, the \code{variables_file} is read using \code{\link[readr:read_delim]{readr::read_csv2()}}.}
+
+\item{csv2_trans}{A logical value. If set to \code{FALSE} (default), the
+\code{translations_file} is read using \code{\link[readr:read_delim]{readr::read_csv()}}.
+If set to \code{TRUE}, the \code{translations_file} is read using \code{\link[readr:read_delim]{readr::read_csv2()}}.}
 }
 \value{
 A tibble imported from \code{data_file} with column names, values, and
@@ -81,13 +101,13 @@ all yes/no responses to logical values, \code{translations_file} may be used
 to convert each "tak"/"ja" to "TRUE" and each "nie"/"nei" to "FALSE" and
 "logical" may be added to the "Type" column in relevant rows of \code{variables_file}.
 
-All file reading is done via \code{\link[readr:read_delim]{readr::read_csv()}} with parsing messages
-suppressed but the parsing issues warning on. If you see it, it is not
-very useful, as you don't know which file import is concerned and
-you can't run \code{\link[readr:problems]{readr::problems()}} as advised by the warning message.
-Other than that, when reading \code{variables_file} and \code{translations_file}
-anything other than expected columns is quietly ignored (so you can keep
-columns with some extra information, notes etc. in these files).
+All file reading is done via \code{\link[readr:read_delim]{readr::read_csv()}} or \code{\link[readr:read_delim]{readr::read_csv2()}}
+with parsing messages suppressed but the parsing issues warning on.
+If you see it, it is not very useful, as you don't know which file import
+is concerned and you can't run \code{\link[readr:problems]{readr::problems()}} as advised by the
+warning message. Other than that, when reading \code{variables_file} and
+\code{translations_file} anything other than expected columns is quietly ignored
+(so you can keep columns with some extra information, notes etc. in these files).
 }
 \examples{
 # an example variables_file and translations_file might be helpful
