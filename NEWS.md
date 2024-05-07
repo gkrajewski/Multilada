@@ -1,3 +1,9 @@
+# Multilada 0.7.0
+
+* `fm_read()`: optional support for semicolon-delimited files (`csv2`)
+and other improvements.
+* `fm_variables()`: various fixes.
+
 # Multilada 0.6.0
 
 * `fm_read()`: translations in `translations_file` may be scoped to a single column
