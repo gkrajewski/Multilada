@@ -4,7 +4,15 @@
 \alias{fm_read}
 \title{Read and preprocess WP \emph{Form Maker} data}
 \usage{
-fm_read(data_file, variables_file, translations_file = NULL, lang)
+fm_read(
+  data_file,
+  variables_file,
+  translations_file = NULL,
+  lang,
+  csv2_data = FALSE,
+  csv2_var = FALSE,
+  csv2_trans = FALSE
+)
 }
 \arguments{
 \item{data_file}{A \code{character}, the name of the file which the data are to be read from.
@@ -14,20 +22,30 @@ of the WP \emph{Form Maker} plugin.}
 \item{variables_file}{A \code{character}, the name of the "dictionary" file. It should be
 a \code{csv} file containing at least columns named "Label", "Import", "Type",
 and \code{lang} (the latter contains column names of \code{data_file} for a given language).
-Anything else is quietly ignored (unless causes \code{\link[=read.csv]{read.csv()}} to throw an error).
 See ‘Details’.}
 
 \item{translations_file}{A \code{character}, the name of the (optional) "translations" file.
-It should be a \code{csv} file containing at least a column named "Translation"
-and a column named \code{lang}, which contains original values (for a given language)
-to be translated. Anything else is quietly ignored
-(unless causes \code{\link[=read.csv]{read.csv()}} to throw an error).}
+It should be a \code{csv} file containing at least columns named "Translation" and
+"Label" and a column named \code{lang}, which contains original values
+(for a given language) to be translated. See ‘Details’.}
 
 \item{lang}{A \code{character}, the name of language specific columns in \code{variables_file}
 and \code{translations_file}. It may be, e.g., a language ISO code ("no", "pl" etc.).}
+
+\item{csv2_data}{A logical value. If set to \code{FALSE} (default), the
+\code{data_file} is read using \code{\link[readr:read_delim]{readr::read_csv()}}.
+If set to \code{TRUE}, the \code{data_file} is read using \code{\link[readr:read_delim]{readr::read_csv2()}}.}
+
+\item{csv2_var}{A logical value. If set to \code{FALSE} (default), the
+\code{variables_file} is read using \code{\link[readr:read_delim]{readr::read_csv()}}.
+If set to \code{TRUE}, the \code{variables_file} is read using \code{\link[readr:read_delim]{readr::read_csv2()}}.}
+
+\item{csv2_trans}{A logical value. If set to \code{FALSE} (default), the
+\code{translations_file} is read using \code{\link[readr:read_delim]{readr::read_csv()}}.
+If set to \code{TRUE}, the \code{translations_file} is read using \code{\link[readr:read_delim]{readr::read_csv2()}}.}
 }
 \value{
-A data frame imported from \code{data_file} with column names, values, and
+A tibble imported from \code{data_file} with column names, values, and
 types changed as described above.
 }
 \description{
@@ -40,28 +58,39 @@ rather than setting them directly in \emph{R} might seem inconvenient at least b
 this way it is easy to share and modify the settings across projects, versions,
 and languages. \code{variables_file} should be treated as a "dictionary" file,
 with columns containing original \emph{Form Maker} form field names for
-each language version and a "Label" column with language independent target
-variable names.
+each language version (usually actual questions) and a "Label" column
+with language independent target variable names.
 
 Only columns with labels provided in the "Label" column are imported.
 Additionally, there is the "Import" column to quickly switch on and off importing:
-variables for which this column is empty are not imported. Language specific
-field names in \code{variables_file} should look exactly like column names of
-a data frame returned by \code{read.csv(data_file)}, \strong{not} like they look \strong{in}
-\code{data_file} downloaded from the website.
+variables for which this column is empty are not imported.
 
+Language specific field names in \code{variables_file} should look exactly
+like column names of \code{data_file} downloaded from the website (usually actual questions).
+The only exception is duplicated names (questions), which should have
+"...j" appended, where \code{j} is the column position (consistent with
+\code{\link[readr:read_delim]{readr::read_csv()}}'s default \code{name_repair = "unique"}; see also
+low level \code{\link[vctrs:vec_as_names]{vctrs::vec_as_names()}} for details and \code{\link[=fm_variables]{fm_variables()}},
+a helper function to prepare such a column of field names or indeed
+a whole empty \code{variables_file}).
+
+\strong{Everything} is imported as \code{character}, which is conservative and safe
+(also all empty fields are imported as \code{NA}s).
 The "Type" column of \code{variables_file} may be used to convert the type
-of the imported column (probably \code{numeric} or \code{character}). It should contain
-the name of the required type ("type" so that \code{as.type()} exists) or,
-if the imported column contains strings to be converted to a date or
+of an imported column to something else. It should contain
+the name of the required type ("type", so that \code{as.type()} exists) or,
+if the imported column contains strings to be converted to the date or
 date-time type, it should contain the expected format of the string,
 as used by \code{\link[=strptime]{strptime()}}, i.e., the value of \code{format} argument to
 \code{\link[=as.POSIXct]{as.POSIXct()}}.
 
-If \code{translations_file} is provided, all occurrences of values in its
+If \code{translations_file} is provided, occurrences of values in its
 \code{lang} column in the imported data frame are changed to the corresponding
-values in its "Translation" column. So far this is not a column-wise
-operation (e.g., translating \emph{ja}'s to \emph{yes}'es across all the columns).
+values in its "Translation" column. If "Label" column is empty
+for a given row, this is done across the whole data frame
+(e.g., translating \emph{ja}'s to \emph{yes}'es across all the columns).
+Otherwise the translation is scoped to the column (variable)
+named in "Label" (using a label from \code{variables_file}).
 
 \code{fm_read()} proceeds in this order: it imports data from \code{data_file} to
 a data frame, renames its columns using "Label" from \code{variables_file},
@@ -71,8 +100,21 @@ using "Type" from \code{variables_file}. So, for example, to convert
 all yes/no responses to logical values, \code{translations_file} may be used
 to convert each "tak"/"ja" to "TRUE" and each "nie"/"nei" to "FALSE" and
 "logical" may be added to the "Type" column in relevant rows of \code{variables_file}.
+
+All file reading is done via \code{\link[readr:read_delim]{readr::read_csv()}} or \code{\link[readr:read_delim]{readr::read_csv2()}}
+with parsing messages suppressed but the parsing issues warning on.
+If you see it, it is not very useful, as you don't know which file import
+is concerned and you can't run \code{\link[readr:problems]{readr::problems()}} as advised by the
+warning message. Other than that, when reading \code{variables_file} and
+\code{translations_file} anything other than expected columns is quietly ignored
+(so you can keep columns with some extra information, notes etc. in these files).
 }
 \examples{
 # an example variables_file and translations_file might be helpful
 
+}
+\seealso{
+\code{\link[=fm_variables]{fm_variables()}} for preparing a new \code{variables_file} or
+just a single, language specific, column with \emph{Form Maker} field names,
+which may be added to \code{variables_file}.
 }

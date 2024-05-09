@@ -1,3 +1,29 @@
+# Multilada 0.7.0
+
+* `fm_read()`: optional support for semicolon-delimited files (`csv2`)
+and other improvements.
+* `fm_variables()`: various fixes.
+
+# Multilada 0.6.0
+
+* `fm_read()`: translations in `translations_file` may be scoped to a single column
+(rather than be applied across the board).
+* `fm_variables()`: revamped `fm_fields()` --- can create (and save) an empty
+(template) `variables_file`,
+* `fm_grading()`: some fixes.
+
+# Multilada 0.5.0
+
+* `fm_matrix()` and `fm_grading()` don't crash on tibbles.
+* `cdi_read()` and `fm_read()` always import to a tibble.
+* `variables_file` used by `fm_read()` uses form field names (questions)
+as they look in a `csv` file downloaded from *Form Maker*
+(as long as they are unique), which makes it easier to work with the file.
+* `fm_fields()` added: creates a column of field names (questions)
+for `variables_file` from a `csv` file downloaded from *Form Maker*.
+* `fm_read()` imports everything as `character`.
+* `fm_read()` parsing messages (but not warnings) suppressed.
+
 # Multilada 0.4.0
 
 * Functions dealing with *Form Maker* data added.

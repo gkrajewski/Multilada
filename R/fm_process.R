@@ -51,7 +51,7 @@ fm_matrix <- function(data, names_prefix = NULL, keep = FALSE) {
                                \\]
                                =(?<response>[01])", comments = TRUE)
 
-     stringr::str_match_all(dplyr::pull(data[, 2]), pattern) %>% purrr::map(function(x) {
+     stringr::str_match_all(data[[2]], pattern) %>% purrr::map(function(x) {
           as.data.frame(x) %>%
                dplyr::select(- .data$V1) %>%
                dplyr::filter(.data$response == 1) %>%
@@ -72,12 +72,13 @@ fm_matrix <- function(data, names_prefix = NULL, keep = FALSE) {
 #' @export
 fm_grading <- function(data, names_prefix = NULL, keep = FALSE) {
      if(is.null(names_prefix)) colnames(data)[2] -> names_prefix
-     pattern <- stringr::regex("(?<varname>[^:, ]+?)
+     pattern <- stringr::regex("(?<varname>[^:, ]*?)
                                :\\s
                                (?<value>[^:, ]*?)
                                ,\\s", comments = TRUE)
 
-     stringr::str_match_all(dplyr::pull(data[, 2]), pattern) %>% purrr::map(function(x) {
+     data[[2]] <- tidyr::replace_na(data[[2]], "")
+     stringr::str_match_all(data[[2]], pattern) %>% purrr::map(function(x) {
           as.data.frame(x) %>%
                dplyr::select(- .data$V1)
      }) %>% purrr::list_rbind(names_to = "rowid") %>%
