@@ -4,11 +4,14 @@
 \alias{cdi_itemise_oneCheckboxGroup}
 \title{Add item definitions to \code{oneCheckboxGroup} data}
 \usage{
-cdi_itemise_oneCheckboxGroup(data, items)
+cdi_itemise_oneCheckboxGroup(data, type, items)
 }
 \arguments{
 \item{data}{A data frame containing answers to a \emph{CDI-Online} \strong{static} form,
 as returned by \code{\link[=cdi_read]{cdi_read()}} (or obtained otherwise).}
+
+\item{type}{A \code{character}, the value of the \code{type} column of the \code{data} dataframe,
+e.g., "word" for \code{oneCheckboxGroup}, "alternatives" for \code{checkboxAlt}.}
 
 \item{items}{A data frame containing item definitions for a \emph{CDI-Online} form, e.g., as imported from
 \code{items.csv} file found in the appropriate subfolder of \verb{www/languages/} in your \emph{CDI-Online} installation
