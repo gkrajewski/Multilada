@@ -16,11 +16,11 @@
 #' "response" (0 or 1), and "definition", as well as any other columns contained in `items`.
 #'
 #' @export
-cdi_itemise_oneCheckboxGroup <- function(data, items) {
-        items %>% dplyr::filter(.data$type == "word") %>%
+cdi_itemise_oneCheckboxGroup <- function(data, type, items) {
+        items %>% dplyr::filter(.data$type == {{type}}) %>%
                 dplyr::group_by(.data$category) %>%
                 dplyr::mutate(item_id = dplyr::row_number()) -> items
-        data %>% dplyr::filter(.data$type == "word" & .data$answer_type == "oneCheckboxGroup") %>%
+        data %>% dplyr::filter(.data$type == {{type}} & .data$answer_type == "oneCheckboxGroup") %>%
                 dplyr::select(.data$id, .data$end_date,
                               .data$type, .data$category, .data$answer1, .data$answer2) -> data
         data$answer1 <- as.integer(as.character(data$answer1)) # Comments are saved in this column as well
