@@ -1,3 +1,17 @@
+# Multilada 0.7.0
+
+* `fm_read()`: optional support for semicolon-delimited files (`csv2`)
+and other improvements.
+* `fm_variables()`: various fixes.
+
+# Multilada 0.6.0
+
+* `fm_read()`: translations in `translations_file` may be scoped to a single column
+(rather than be applied across the board).
+* `fm_variables()`: revamped `fm_fields()` --- can create (and save) an empty
+(template) `variables_file`,
+* `fm_grading()`: some fixes.
+
 # Multilada 0.5.0
 
 * `fm_matrix()` and `fm_grading()` don't crash on tibbles.
