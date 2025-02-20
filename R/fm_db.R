@@ -1,4 +1,24 @@
-# Processing FormMaker data dumped from MySQL
+#### Processing backup of WP database ####
+
+brew_command <- "/opt/homebrew/bin/brew"
+mysql_command <- "/opt/homebrew/bin/mysql"
+mysql_user <- "root"
+mysql_database <- "multilada_forms"
+# Get the most recent dump file (if any):
+if(is.na(mysql_dumpfile <- rev(sort(list.files(pattern = "^backup_.*_MultiLADA_UW_Forms_.*-db$")))[1]))
+     stop("No backup files found.")
+
+# Import the backup from a shell script:
+system2("/bin/bash", args = c("multilada_forms_import.sh",
+                              brew_command, mysql_command, mysql_user, mysql_database, mysql_dumpfile))
+
+RMariaDB::dbConnect(RMariaDB::MariaDB(), dbname = mysql_database, username = mysql_user) -> connection
+RMariaDB::dbGetQuery(connection, "SELECT * FROM `wor2969_formmaker_submits`") -> formmaker_submits
+RMariaDB::dbGetQuery(connection, "SELECT * FROM `wor2969_formmaker`") -> formmaker_forms
+RMariaDB::dbDisconnect(connection)
+
+
+#### Processing FormMaker data dumped from MySQL ####
 
 form_name <- "IRMIK3"
 form_file_name <- "wor2969_formmaker.csv"
