@@ -6,13 +6,15 @@ mysql_user <- "root"
 mysql_database <- "multilada_forms"
 backup_path <- "~/Library/CloudStorage/GoogleDrive-g.krajewski@psych.uw.edu.pl/My Drive/UpdraftPlus"
 # Get the most recent dump file (if any):
-if(is.na(mysql_dumpfile <- rev(sort(list.files(backup_path, pattern = "^backup_.*_MultiLADA_UW_Forms_.*-db\\.gz$", full.names=TRUE)))[1]))
+if(is.na(backup_file <- rev(sort(list.files(backup_path, pattern = "^backup_[0-9-]+_MultiLADA_UW_Forms_.*-db\\.gz$", full.names=TRUE)))[1]))
      stop("No backup files found.")
-R.utils::gunzip(mysql_dumpfile, destname = "db_dump", remove = FALSE, overwrite = TRUE)
+backup_date <- stringr::str_match(backup_file, "backup_([0-9-]+)_MultiLADA_UW_Forms_.*-db\\.gz")[, 2]
+mysql_dumpfile <- paste0("db_dump_", backup_date, ".sql")
+R.utils::gunzip(backup_file, destname = mysql_dumpfile, remove = FALSE, overwrite = TRUE)
 
 # Import the backup from a shell script:
 system2("/bin/bash", args = c("multilada_forms_import.sh",
-                              brew_command, mysql_command, mysql_user, mysql_database, "db_dump"))
+                              brew_command, mysql_command, mysql_user, mysql_database, mysql_dumpfile))
 
 RMariaDB::dbConnect(RMariaDB::MariaDB(), dbname = mysql_database, username = mysql_user) -> connection
 RMariaDB::dbGetQuery(connection, "SELECT * FROM `wor2969_formmaker_submits`") -> formmaker_submits
